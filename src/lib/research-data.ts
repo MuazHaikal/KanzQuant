@@ -10,6 +10,7 @@ export type Analogue = {
 export type RegimeHistory = { date: string; regime_id: number; label: string; confidence: number };
 export type RegimeStat = { name: string; regime_id: number; months: number; mean: number | null; hit_rate: number | null; volatility: number | null };
 export type ResearchSnapshot = {
+  state_vectors?: { date: string; values: Record<string, number> }[];
   as_of: string; updated_at: string; current_regime: string; confidence: number; regime_duration_months: number;
   features: FeatureDefinition[]; current_state: Record<string, number>; state_rows: StateRow[];
   neighbours: Analogue[]; forward_summary: Record<string, Record<string, Record<string, number | null>>>;

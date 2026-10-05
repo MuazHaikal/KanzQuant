@@ -1,6 +1,6 @@
 {
   "name": "kanzquant",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
+    "test:focus": "node --env-file=.env.local scripts/test_focus.mjs",
     "research": "node scripts/run_python.mjs scripts/run_research.py",
     "research:verify": "node scripts/run_python.mjs scripts/verify_research.py",
     "ingest:fred": "node scripts/run_python.mjs scripts/ingest_fred.py",

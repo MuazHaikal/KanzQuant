@@ -1,6 +1,14 @@
 # KanzQuant
 
-KanzQuant is a dense quantitative research workstation. Version 0.1 delivers a complete macro-regime and historical-similarity workflow: multi-frequency data ingestion, point-in-time features, a monthly state vector, reproducible regime clustering, temporally de-duplicated historical neighbours, and conditional forward returns.
+KanzQuant is a dense quantitative research workstation. Version 0.1.2 adds interactive Focus Mode to the validated macro-regime and historical-similarity workflow.
+
+## Focus Mode
+
+Overview links to six factor workspaces, historical analogues, four return horizons, regime detail, and expanded market charts. Escape returns to Overview; left/right arrows switch factors. Charts support hover, point selection, zoom controls, drag pan, range brushes, and reset.
+
+Focus views require database-mode persisted research with state vectors. They use existing semantic axes, not new PCA factor weights. Factor episodes rank absolute axis distance with a 12-month exclusion and nine-month spacing; they are distinct from the unchanged 19-feature cosine analogues. Outcomes are descriptive and never forecasts. Missing observations show N/A.
+
+After starting a production server on port 3001, run `npm run test:focus` for math, real Neon mapping, valid routes, invalid routes, and database-mode checks. Set `FOCUS_TEST_URL` to test another origin.
 
 ## Architecture
 

@@ -27,11 +27,11 @@ export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCo
     </div>
     <aside className="sidebar">
       {groups.map((group) => <div key={group.label}><div className="nav-section">{group.label}</div>{group.items.map(([label,href,code]) => {
-        const active = href === "/" ? path === "/" : path.startsWith(href);
+        const active = href === "/" ? path === "/" || path.startsWith("/focus") : path.startsWith(href);
         const disabled = href === "#";
         return <Link aria-disabled={disabled} tabIndex={disabled ? -1 : 0} onClick={disabled ? (e)=>e.preventDefault() : undefined} className={`nav-link ${active ? "active" : ""} ${disabled ? "disabled" : ""}`} href={href} key={label}><span className="nav-icon">{code}</span>{label}</Link>;
       })}</div>)}
-      <div className="sidebar-foot">KQ CORE v0.1.0<br/>ENGINE · ONLINE<br/>DATA · {seriesCount} SERIES</div>
+      <div className="sidebar-foot">KQ CORE v0.1.2<br/>ENGINE · ONLINE<br/>DATA · {seriesCount} SERIES</div>
     </aside>
     <main className="main">{children}</main>
   </div>;
