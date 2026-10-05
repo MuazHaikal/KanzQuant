@@ -4,6 +4,7 @@ import { AppShell } from "@/components/app-shell";
 import type { ShellTicker } from "@/components/app-shell";
 import { getResearchSnapshot } from "@/lib/research-data";
 import { getSeriesCatalogue } from "@/lib/database";
+import { factors } from "@/lib/focus-math";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,9 +37,16 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full"><AppShell dataMode={dataMode} asOf={snapshot.as_of} updatedAt={snapshot.updated_at.slice(0, 16).replace("T", " ") + "Z"} ticker={ticker} seriesCount={catalogue.length}>{children}</AppShell></body>
+      <head>{/* Synchronous first-paint appearance; no third-party script or credentials. */}<script id="kanzquant-appearance" dangerouslySetInnerHTML={{__html:`try{var t=localStorage.getItem('kanzquant.theme.v1');document.documentElement.dataset.theme=t==='light'||t==='dark'?t:matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}catch{document.documentElement.dataset.theme='dark'}`}}/></head>
+      <body className="min-h-full"><AppShell dataMode={dataMode} asOf={snapshot.as_of} updatedAt={snapshot.updated_at.slice(0, 16).replace("T", " ") + "Z"} ticker={ticker} seriesCount={catalogue.length} searchItems={[
+        ...factors.map(f=>({label:f[0].toUpperCase()+f.slice(1),href:"/focus/factor/"+f,kind:"Factor"})),
+        ...catalogue.map(s=>({label:s.externalId+" · "+s.name,href:"/data?q="+encodeURIComponent(s.externalId),kind:"Series",keywords:s.category+" "+snapshot.features.filter(f=>f.source===s.externalId).map(f=>f.group+" "+f.description).join(" ")})),
+        ...(snapshot.state_vectors??[]).filter(v=>v.date<snapshot.as_of).map(v=>({label:v.date,href:"/focus/analogue/"+v.date,kind:"Historical date"})),
+        ...[["Overview","/"],["Macro","/macro"],["Similarity","/similarity"],["Regimes","/regimes"],["Data / Series","/data"],["Experiments","/experiments"]].map(([label,href])=>({label,href,kind:"Module"}))
+      ]}>{children}</AppShell></body>
     </html>
   );
 }

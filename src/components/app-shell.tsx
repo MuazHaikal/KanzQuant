@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Appearance } from "./appearance";
+import { GlobalSearch, type SearchItem } from "./global-search";
 
 export type ShellTicker = [label: string, value: string, delta: string, tone: "up" | "down" | "warn"];
 
@@ -11,16 +13,19 @@ const groups = [
   { label:"SYSTEM", items:[["Data / Series","/data","09"],["Experiments","/experiments","10"]] },
 ];
 
-export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCount }: {
+export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCount, searchItems }: {
   children: React.ReactNode; dataMode: "demo" | "database"; asOf: string; updatedAt: string;
   ticker: ShellTicker[]; seriesCount: number;
+  searchItems: SearchItem[];
 }) {
   const path = usePathname();
   return <div className="shell">
     <header className="topbar">
       <Link className="brand" href="/"><span className="brand-mark">KQ</span><span>KANZQUANT</span></Link>
-      <div className="top-context mono"><span>WORKSPACE <strong>MACRO / US</strong></span><span>AS OF <strong>{asOf}</strong></span><span>FREQ <strong>MONTHLY</strong></span></div>
+      <div className="top-context"><span><strong>US Macro</strong></span><span>As of <strong>{asOf}</strong></span></div>
+      <GlobalSearch items={searchItems}/>
       <div className="system-status mono"><span className="status-dot"/>{dataMode === "database" ? <>FRED · YAHOO FINANCE · NEON&nbsp; <span className="updated">UPDATED {updatedAt}</span></> : "DEMO FEED · EXPLICIT MODE"}</div>
+      <Appearance/>
     </header>
     <div className="ticker" aria-label="Current market metrics">
       {ticker.map(([label,value,delta,tone]) => <div className="ticker-item" key={label}><span className="ticker-label">{label}</span><span className="ticker-value">{value} <small className={`delta-${tone}`}>{delta}</small></span></div>)}

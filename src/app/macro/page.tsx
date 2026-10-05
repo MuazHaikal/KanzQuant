@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { getSeriesCatalogue, getSeriesDetail } from "@/lib/database";
-import { LineChart, PageHead, Panel } from "@/components/ui";
+import { PageHead, Panel } from "@/components/ui";
+import { ResearchChart } from "@/components/research-chart";
 
 export default async function MacroPage({searchParams}:{searchParams:Promise<{series?:string}>}) {
   const {series:id}=await searchParams; const [selected,catalogue]=await Promise.all([getSeriesDetail(id),getSeriesCatalogue()]);
   return <><PageHead section="Research / Macro" title="Macro Series Explorer" meta={`${selected.externalId} · ${selected.frequency.toUpperCase()}`}/><div className="split-grid">
     <Panel title="Series universe" meta={`${catalogue.length} ACTIVE`} noPad><div className="series-list">{catalogue.map(s=><Link className={`series-item ${s.id===selected.id?"active":""}`} href={`/macro?series=${s.externalId}`} key={s.id}><div className="series-code">{s.externalId}</div><div className="series-name">{s.shortName} <span style={{float:"right",color:"var(--dim)"}}>{s.category}</span></div></Link>)}</div></Panel>
-    <Panel title={selected.name} meta={`${selected.provider} · ${selected.unit}`} noPad><div className="toolbar"><span className="pill live">{selected.frequency}</span><span className="pill">MAX</span><span className="pill">RAW</span><span style={{marginLeft:"auto"}} className="panel-meta">{selected.start} — {selected.end}</span></div><LineChart data={selected.data} height={330} label={`${selected.name} time series`}/><div className="footer-note">SOURCE: {selected.provider} · MONTH-END ALIGNMENT · NO FORWARD FILL ACROSS RELEASE GAPS</div></Panel>
+    <Panel title={selected.name} meta={`${selected.provider} · ${selected.unit}`} noPad><div className="toolbar"><span className="pill live">{selected.frequency}</span><span className="pill">RAW</span><span style={{marginLeft:"auto"}} className="panel-meta">{selected.start} — {selected.end}</span></div><ResearchChart series={[{name:selected.shortName,points:selected.data}]} height={330}/><div className="footer-note">SOURCE: {selected.provider} · REAL SOURCE OBSERVATIONS · NO FABRICATED OHLC</div></Panel>
     <Panel title="Series statistics" meta="LATEST" noPad><div className="stat-grid">{[["Latest",selected.latest.toLocaleString()],["1 OBS Δ",`${selected.change1m>0?"+":""}${selected.change1m.toFixed(2)}%`],["3 OBS Δ",`${selected.change3m>0?"+":""}${selected.change3m.toFixed(2)}%`],["12 OBS Δ",`${selected.change12m>0?"+":""}${selected.change12m.toFixed(2)}%`],["Expanding Z",`${selected.zscore>0?"+":""}${selected.zscore.toFixed(2)}`],["Percentile",`P${selected.percentile}`]].map(([l,v])=><div className="stat-cell" key={l}><div className="stat-label">{l}</div><div className="stat-value">{v}</div></div>)}</div><div style={{padding:10}}><div className="stat-label">Metadata</div><p className="methodology mono">ID {selected.externalId}<br/>PROVIDER {selected.provider}<br/>FREQUENCY {selected.frequency}<br/>OBS {selected.observations.toLocaleString()}<br/>UPDATED {selected.updated}<br/>SOURCE VALUES · REAL DATABASE ROWS</p></div></Panel>
   </div></>;
 }

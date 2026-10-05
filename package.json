@@ -9,6 +9,8 @@
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "test:focus": "node --env-file=.env.local scripts/test_focus.mjs",
+    "test:context": "node --env-file=.env.local scripts/test_context.mjs",
+    "test:market": "node --env-file=.env.local scripts/test_market.mjs",
     "research": "node scripts/run_python.mjs scripts/run_research.py",
     "research:verify": "node scripts/run_python.mjs scripts/verify_research.py",
     "ingest:fred": "node scripts/run_python.mjs scripts/ingest_fred.py",

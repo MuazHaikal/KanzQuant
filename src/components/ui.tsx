@@ -28,6 +28,11 @@ export function MethodologyDisclosure() {
       <span>SPX · PRICE RETURNS, DIVIDENDS EXCLUDED</span>
       <span>FRED · SIMPLIFIED RELEASE LAGS, NOT VINTAGE DATA</span>
       <span>REGIMES · FULL-HISTORY DESCRIPTIVE, NOT WALK-FORWARD</span>
+      <span>LEVEL · Average-rank percentile in available history; ≤P10 very low, ≥P90 very high. Axis units combine standardized inputs; σ is shorthand, not a re-standardized factor.</span>
+      <span>MOVEMENT · Absolute change vs prior same-horizon changes. P75 notable · P90 unusual · P99 extreme; below P75 typical. Minimum 36 prior moves; N/A otherwise. Descriptive, not a significance test.</span>
+      <span>TREND · Latest 3M pace vs the preceding 3M pace. Under 0.05 axis units/month = stable; opposite meaningful signs = reversal. Input contributions are arithmetic, not causal.</span>
+      <span>CHARTS · Drag / horizontal trackpad to pan. Wheel, Control-pinch or Shift-wheel to zoom. Small vertical trackpad gestures scroll the page. Double-click / Home resets. Arrow keys pan; + / − zoom. Line charts: Enter selects.</span>
+      <span>MARKET INSPECTION · Real Yahoo daily OHLC; raw price candles and anchor-comparison closes, not dividend-adjusted total returns. Calendar-period aggregation. Forward-return research still uses its validated monthly adjusted-price inputs.</span>
     </div>
   </details>;
 }
