@@ -1,0 +1,6 @@
+# Python 3.11; execution only, no ingestion/pandas/scikit-learn dependencies.
+fastapi==0.142.2
+uvicorn==0.54.0
+numpy==2.4.6
+scipy==1.17.1
+psycopg[binary,pool]==3.3.6

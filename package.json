@@ -1,6 +1,6 @@
 {
   "name": "kanzquant",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,6 +11,12 @@
     "test:focus": "node --env-file=.env.local scripts/test_focus.mjs",
     "test:context": "node --env-file=.env.local scripts/test_context.mjs",
     "test:market": "node --env-file=.env.local scripts/test_market.mjs",
+    "test:hypothesis": "node --env-file=.env.local scripts/test_hypothesis.mjs",
+    "test:hypothesis-service": "node --env-file=.env.local scripts/test_hypothesis_service.mjs",
+    "test:hypothesis-client": "node scripts/test_hypothesis_client.mjs",
+    "hypothesis:reproduce": "node scripts/run_python.mjs scripts/reproduce_hypothesis.py",
+    "hypothesis:configure": "node scripts/configure_hypothesis.mjs",
+    "hypothesis:api": "node --env-file=.env.local scripts/run_python.mjs -m uvicorn services.hypothesis_api.main:app --host 127.0.0.1 --port 8001 --workers 1 --no-access-log",
     "research": "node scripts/run_python.mjs scripts/run_research.py",
     "research:verify": "node scripts/run_python.mjs scripts/verify_research.py",
     "ingest:fred": "node scripts/run_python.mjs scripts/ingest_fred.py",

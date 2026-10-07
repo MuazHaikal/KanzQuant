@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { FocusShell } from "@/components/focus-shell";
 import { MarketChart } from "@/components/market-chart";
 import { getMarketWindow } from "@/lib/market-data";
@@ -20,6 +21,7 @@ export default async function AnaloguePage({params,searchParams}:{params:Promise
  const norm=Math.sqrt(keys.reduce((s,k)=>s+latest[k]**2,0)*keys.reduce((s,k)=>s+historical.values[k]**2,0));
  const differences=data.features.map(f=>({...f,now:latest[f.key],then:historical.values[f.key],difference:Math.abs(latest[f.key]-historical.values[f.key]),contribution:norm?latest[f.key]*historical.values[f.key]/norm*100:null})).filter(f=>Number.isFinite(f.difference)).sort((a,b)=>b.difference-a.difference);
  return <FocusShell title={"Historical analogue / "+date} asOf={data.as_of} status={[regime,"Similarity "+number(score===null?null:score*100),"Today: "+data.current_regime]}>
+ <div className="hyp-context-action"><Link href={`/hypothesis?source=credit&metric=level&op=${axis(historical.values,"credit")!<0?"lt":"gt"}&threshold=${(axis(historical.values,"credit")??0).toFixed(2)}`}>TEST SIMILAR CONDITION ↗</Link><span>Credit level at this date · editable, not full-state similarity.</span></div>
  <Panel title="Analogue market inspection" meta={`Analogue ${date} · current anchor ${data.as_of}`} noPad><MarketChart initial={market} initialAsset={asset} initialView={view} anchor={date} currentAnchor={data.as_of} height={340} regimes={data.regime_history.map(r=>({date:r.date,label:r.label,color:regimeColor(r.label)}))}/></Panel>
  <div className="focus-columns"><div className="focus-stack">
  <Panel title="Current vs historical state" meta="SEMANTIC AXES · SAME TRANSFORMS" noPad><table className="data-table"><thead><tr><th>Factor</th><th>Current σ</th><th>{date} σ</th><th>Δ σ</th></tr></thead><tbody>{factors.map(f=>{const now=axis(latest,f),then=axis(historical.values,f);return <tr key={f}><td>{f}</td><td>{number(now)}</td><td>{number(then)}</td><td>{number(now===null||then===null?null:now-then)}</td></tr>;})}</tbody></table></Panel>

@@ -1,6 +1,52 @@
 # KanzQuant
 
-KanzQuant is a dense quantitative research workstation. Version 0.1.2 adds interactive Focus Mode to the validated macro-regime and historical-similarity workflow.
+KanzQuant is a dense quantitative research workstation. Local version 0.2 adds Hypothesis Lab to the validated macro-regime, historical-similarity and Focus Mode workflow. This release is not deployed.
+
+## Hypothesis Lab / local v0.2
+
+Open `/hypothesis`. Conditional tests support up to three AND conditions on existing semantic factors or raw FRED series, levels or signed calendar 1M/3M/12M changes, prior-only percentile/value thresholds, direction and level states. Targets are SPX, GLD or IEF forward returns at 1M/3M/6M/12M. Relationship mode provides Pearson, Spearman and single-input OLS with a scatter/fit view. Factor, return and analogue pages provide editable contextual entry points; these do not recreate full-state nearest-analogue selection.
+
+Defaults are exploratory, two-sided, 10,000 permutation resamples, 10,000 bootstrap resamples, seed 42, 95% percentile bootstrap CI, nine-month spacing and at least ten event **and** ten non-event observations. The initial Credit 3M/P10/6M example may legitimately have insufficient history after spacing. No outcomes or inferential statistics are invented to enlarge that sample.
+
+- **Conditions:** percentile/state ranks compare with at least 36 strictly prior same-metric observations. Factors reuse persisted point-in-time semantic axes; FRED levels reuse simplified release lags (not vintages). Calendar gaps do not become adjacent-period changes. Full-history regime labels are case context only, never event inputs.
+- **Time dependence:** a common chronological calendar grid thins both groups before outcome availability is checked, using `max(requested spacing, return horizon)`. This prevents overlapping sampled forward-return windows across groups, but does not prove independence or remove all serial dependence. Permutation exchangeability, IID bootstrap, Welch and OLS assumptions remain limitations.
+- **Conditional inference:** permutation mean difference is primary; Welch unequal-variance t and asymptotic Mann–Whitney U are secondary checks. Mann–Whitney concerns distributions, not necessarily medians. Cohen’s d uses pooled within-group SD. Full-history baseline includes events, so its displayed mean difference/CI/standardized effect are scaled by the non-event fraction; inference compares disjoint event/non-event groups rather than treating the shared baseline as independent.
+- **Evidence:** Moderate requires raw P ≤ .05, CI excluding zero, absolute effect ≥ .2, event/paired N ≥ 15, and ≥60% sign agreement among at least three estimable checks. Strong additionally requires P ≤ .01, effect ≥ .5, N ≥ 30, ≥80% agreement and both fixed calendar halves agreeing with estimable results. Otherwise evidence is Weak or Insufficient Sample. This is an unadjusted descriptive classification, not a probability or causal conclusion.
+- **Robustness:** five bounded nearby percentile thresholds where applicable (only first AND condition varies), all four horizons and fixed calendar halves. No significance sorting or optimization. A separate BH correction covers the displayed robustness-check family. The recorded test count is the primary comparison plus these sensitivity comparisons; secondary statistics inspect the same comparisons and are not new condition searches.
+- **Research families:** browser runs automatically share a session family, or users can name a cross-session family. BH FDR is recomputed across all primary attempts in that family; unestimable/failed attempts conservatively contribute P=1 while displaying N/A. A single isolated run needs no adjustment. Adding runs changes the family adjustment, never the saved underlying result. Pre-specified is a stored label, not locked preregistration.
+- **Persistence:** uses existing `research_runs`/`research_results`; no schema migration. Each run stores parameters, dates, statistics, cases, robustness, provenance, seed and fingerprint. A compact prepared monthly dataset is frozen once per data hash, shared across runs rather than duplicating raw daily history. Valid failed computations and insufficient/null results remain in the ledger. The interface searches the latest 40 runs; older saved IDs remain directly reopenable.
+
+Hypothesis compute uses the same FastAPI contract locally and on Render. Next.js validates and freezes a compact monthly dataset in Neon, saves a queued run, and returns a five-minute HMAC execution capability. The browser calls Python directly and polls the saved Next.js result route; Vercel never waits for cold Python compute. Completed result pages need only Neon, not an awake Render service. No external-provider calls or ingestion happen during a test.
+
+### Hypothesis Compute / deployment
+
+Architecture: **Vercel → Render Free → existing Neon**. The browser bridges execution; the frontend stays in the existing `kanz-quant` Vercel project.
+
+Local setup: install `requirements-hypothesis-dev.txt` into the project Python 3.11 environment, run `npm run hypothesis:configure` once, then start `npm run hypothesis:api` alongside `npm run dev`. The configuration command preserves existing local settings and creates an ignored strong signing secret without displaying it.
+
+Render: deploy the repository's `render.yaml` Blueprint (`kanzquant-hypothesis`, Free, one worker, Python 3.11). Supply the existing pooled `DATABASE_URL` and the same `HYPOTHESIS_RUN_SECRET` from ignored local configuration. `KANZQUANT_DATA_MODE=database` and exact `ALLOWED_ORIGINS` are supplied by the Blueprint. No FRED key is required. Health: `<Render URL>/healthz`.
+
+Vercel: keep existing database/FRED/data-mode variables; add server-only `HYPOTHESIS_API_URL=<Render HTTPS URL>`, `HYPOTHESIS_RUN_SECRET=<same secret>`, and `HYPOTHESIS_EXECUTION_MODE=remote`, then redeploy. Never prefix the secret with `NEXT_PUBLIC_`. Preview browser origins must be added explicitly to Render's allowlist.
+
+Execution is atomically claimed, duplicate submissions return status without recomputing, failed runs retry under the same ID (up to three attempts), and a three-minute crash lease permits recovery after an interrupted process. One compute slot, a zero-to-two connection pool, four-version monthly cache, 60-second compute bound and transaction-local database timeouts keep the service bounded. Prepare requests have a lightweight per-process client throttle and a Neon-enforced global 120-new-runs/hour cap; this is hobby abuse protection, not an authentication system or a distributed per-user quota. No artificial keep-alive is used. Render Free cold starts and restarts are accepted limitations; see [deployment checklist](docs/hypothesis-production.md).
+
+Verification with the production server on port 3001:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+npm run test:hypothesis
+npm run test:focus
+npm run test:context
+npm run test:market
+npm run db:verify
+npm run lint
+npm run typecheck
+npm run build
+node scripts/run_python.mjs scripts/verify_hypothesis_dataset.py
+npm run hypothesis:reproduce -- <saved-run-uuid>
+```
+
+The read-only reproduction command reruns the engine against the frozen data version and checks the complete stored result. Synthetic known-effect/null datasets exist only in tests. SPX remains price returns excluding dividends; GLD/IEF retain existing adjusted-price semantics. Historical associations are descriptive, not forecasts. The KQ square mark is removed, and Factor Focus retains top metrics with one-at-a-time History, Drivers, Analogues and Market Response tabs.
 
 ## Focus Mode
 

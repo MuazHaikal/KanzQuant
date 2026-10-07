@@ -10,6 +10,7 @@ export default async function ReturnsPage({params}:{params:Promise<{horizon:stri
  const {snapshot:data}=await getFocusData(),rows=data.neighbours.map(r=>({...r,value:r.returns.SPX?.[horizon]??null})),available=rows.filter(r=>r.value!==null),s=stats(available.map(r=>r.value!));
  const sorted=[...available].sort((a,b)=>a.value!-b.value!);
  return <FocusShell title={"Conditional returns / "+horizon.toUpperCase()} asOf={data.as_of} status={["SPX · price returns","N="+s.n,"Historical analogues"]}>
+ <div className="hyp-context-action"><Link href={`/hypothesis?source=credit&metric=3&op=below&threshold=10&horizon=${parseInt(horizon)}`}>OPEN AS HYPOTHESIS ↗</Link><span>Prefill Credit deterioration; not the nearest-analogue selection itself.</span></div>
  <nav className="focus-tabs">{horizons.map(h=><Link className={h===horizon?"selected":""} key={h} href={"/focus/returns/"+h}>{h.toUpperCase()}</Link>)}</nav>
  <div className="focus-columns"><div className="focus-stack">
  <Panel title="Return distribution" meta="10 nearest full-state analogues" noPad><Metrics items={[["Mean",number(s.mean,"%")],["Median",number(s.median,"%")],["Hit rate",s.hit===null?"N/A":s.hit.toFixed(0)+"%"],["N",String(s.n)]]}/><Distribution values={available.map(r=>r.value!)}/><div className="focus-minor">Best {number(s.best,"%")} · Worst {number(s.worst,"%")} · Dispersion (SD) {s.std===null?"N/A":s.std.toFixed(2)+"%"}</div></Panel>

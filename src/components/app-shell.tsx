@@ -9,8 +9,8 @@ export type ShellTicker = [label: string, value: string, delta: string, tone: "u
 
 const groups = [
   { label:"WORKSPACE", items:[["Overview","/","01"],["Macro","/macro","02"],["Similarity","/similarity","03"],["Regimes","/regimes","04"]] },
-  { label:"RESEARCH", items:[["Factors","#","05"],["Strategies","#","06"],["Portfolio","#","07"],["Risk","#","08"]] },
-  { label:"SYSTEM", items:[["Data / Series","/data","09"],["Experiments","/experiments","10"]] },
+  { label:"RESEARCH", items:[["Hypothesis Lab","/hypothesis","05"],["Factors","#","06"],["Strategies","#","07"],["Portfolio","#","08"],["Risk","#","09"]] },
+  { label:"SYSTEM", items:[["Data / Series","/data","10"],["Experiments","/experiments","11"]] },
 ];
 
 export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCount, searchItems }: {
@@ -21,7 +21,7 @@ export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCo
   const path = usePathname();
   return <div className="shell">
     <header className="topbar">
-      <Link className="brand" href="/"><span className="brand-mark">KQ</span><span>KANZQUANT</span></Link>
+      <Link className="brand" href="/">KANZQUANT</Link>
       <div className="top-context"><span><strong>US Macro</strong></span><span>As of <strong>{asOf}</strong></span></div>
       <GlobalSearch items={searchItems}/>
       <div className="system-status mono"><span className="status-dot"/>{dataMode === "database" ? <>FRED · YAHOO FINANCE · NEON&nbsp; <span className="updated">UPDATED {updatedAt}</span></> : "DEMO FEED · EXPLICIT MODE"}</div>
@@ -36,7 +36,7 @@ export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCo
         const disabled = href === "#";
         return <Link aria-disabled={disabled} tabIndex={disabled ? -1 : 0} onClick={disabled ? (e)=>e.preventDefault() : undefined} className={`nav-link ${active ? "active" : ""} ${disabled ? "disabled" : ""}`} href={href} key={label}><span className="nav-icon">{code}</span>{label}</Link>;
       })}</div>)}
-      <div className="sidebar-foot">KQ CORE v0.1.2<br/>ENGINE · ONLINE<br/>DATA · {seriesCount} SERIES</div>
+      <div className="sidebar-foot">KANZQUANT v0.2<br/>ENGINE · ONLINE<br/>DATA · {seriesCount} SERIES</div>
     </aside>
     <main className="main">{children}</main>
   </div>;

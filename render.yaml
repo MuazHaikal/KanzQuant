@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: kanzquant-hypothesis
+    runtime: python
+    plan: free
+    # Inherit the Blueprint branch: stage backend before promoting frontend/main.
+    autoDeployTrigger: commit
+    buildCommand: pip install -r requirements-hypothesis.txt
+    startCommand: uvicorn services.hypothesis_api.main:app --host 0.0.0.0 --port $PORT --workers 1 --no-access-log
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: HYPOTHESIS_RUN_SECRET
+        sync: false
+      - key: KANZQUANT_DATA_MODE
+        value: database
+      - key: ALLOWED_ORIGINS
+        value: https://kanz-quant.vercel.app,http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001
+      - key: OPENBLAS_NUM_THREADS
+        value: "1"
+      - key: OMP_NUM_THREADS
+        value: "1"

@@ -1,0 +1,2 @@
+import { getHypothesisRun } from "@/lib/hypothesis-server";
+export async function GET(_request:Request,{params}:{params:Promise<{id:string}>}){try{const run=await getHypothesisRun((await params).id);return Response.json(run??{error:"Run not found."},{status:run?200:404,headers:{"Cache-Control":"private, no-store"}});}catch{return Response.json({error:"Research ledger unavailable."},{status:503});}}
