@@ -9,10 +9,12 @@ const tokenFor=(id,expires)=>`v1.${expires}.`+createHmac("sha256",process.env.HY
 const body={run_id:capability.run_id,token:capability.execution_token};
 assert.equal((await post({run_id:body.run_id})).status,400);
 assert.equal((await post({...body,token:"invalid"})).status,401);
-assert.equal((await post({...body,token:tokenFor(body.run_id,Math.floor(Date.now()/1000)-1)})).status,401);
+// A remote host can be seconds behind the test machine; exact expiry boundaries
+// are covered with an injected clock in Python, while this is unambiguously expired.
+assert.equal((await post({...body,token:tokenFor(body.run_id,Math.floor(Date.now()/1000)-600)})).status,401);
 assert.equal((await post({...body,run_id:randomUUID()})).status,401);
 assert.equal((await post({...body,token:body.token.slice(0,-1)+(body.token.endsWith("A")?"B":"A")})).status,401);
-const unknown=randomUUID();assert.equal((await post({run_id:unknown,token:tokenFor(unknown,Math.floor(Date.now()/1000)+300)})).status,404);
+const unknown=randomUUID();assert.equal((await post({run_id:unknown,token:tokenFor(unknown,Math.floor(Date.now()/1000)+240)})).status,404);
 assert.equal((await post({...body,python:"arbitrary-code"})).status,400);
 assert.equal((await post(body,"https://untrusted.example")).status,403);
 console.log("Real API unsigned/invalid/expired/tampered/swapped/unknown/code and origin rejection: passed");

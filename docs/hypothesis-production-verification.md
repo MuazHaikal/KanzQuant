@@ -1,6 +1,16 @@
-# Hypothesis service verification — 2026-10-06
+# Hypothesis service verification — 2026-10-07
 
-Status: deployment-ready locally; **not publicly deployed**. Render Dashboard requires sign-in (GitHub browser session also asks for login), Vercel Dashboard requires login, and Vercel CLI reports logged out. GitHub CLI is authenticated, but main was not pushed because doing so could deploy an unconfigured frontend. External Render/Vercel authentication is the remaining boundary.
+Status: **publicly deployed and verified**. Render Free `kanzquant-hypothesis` at `https://kanzquant-hypothesis.onrender.com` serves the Python API. Existing Vercel project `kanz-quant` serves `https://kanz-quant.vercel.app/hypothesis`. Source commit `74382db` was staged on `codex/hypothesis-production`, then fast-forwarded to main after public Render health and Vercel Production configuration passed. Existing Neon/FRED variables were preserved. Credentials were provisioned privately after explicit user approval.
+
+## Public production verification
+
+- Public `/healthz`: HTTP 200, `{status:ok, service:kanzquant-hypothesis, version:0.2}`. Render deployment succeeded in 1m03s; Vercel production build Ready in 28s.
+- Real public prepare → signed Render execution → Neon → saved public result: conditional/relationship, all assets, AND, all horizons through robustness, null/small samples, exact reproduction/reopening, family FDR and concurrent duplicate execution passed. Each successful concurrent run has one attempt and one result. Raw macro/market data and source research runs unchanged.
+- Public unsigned/invalid/expired/tampered/swapped/unknown/code/origin rejection passed. Failed verification run `b06e450b-6a2f-429d-861d-276a050340be` recovered with the same ID, two attempts, one result; health remained good. Only this new verification row's dataset reference was temporarily modified and restored.
+- Browser conditional `678ff0ee-80b2-460e-8e39-92977c221774`: N=38; all five result sections and saved URL refresh passed. Browser relationship `0712c340-5230-46d1-9926-c84230ae3c05`: N=39, complete. Production browser console clean. Credit → TEST THIS run `2709af63-acc5-41ab-8b25-fa62a24c0c09` preserves the prefill and returns honest insufficient-sample N=0. The queued fixture left by the clock-skew test was renewed/executed successfully, not deleted.
+- First Render computation: prepare 1.898s; dataset load 0.498s; statistics/worker 10.346s; result write 0.300s; total execution 11.780s. Warm relationship: prepare 1.018s, statistics 0.956s, write 0.342s, execution 1.545s. Warm conditional: prepare 0.332s, statistics 1.676s, write 0.296s, execution 2.266s. These are API execution timings, not browser delivery or a measured idle-service wake-up.
+- Local and remote clocks differed by approximately three seconds. Remote integration fixtures now use an expiry 600s in the past and a valid unknown-run token 240s ahead; exact expiry boundaries remain covered with an injected Python clock. No service token policy changed.
+- Repeated 50 Python tests, ESLint, TypeScript, client-state tests, database verification, and public market/context/Focus suites passed. No schema migration, paid resources or keep-awake traffic.
 
 ## Verified architecture
 
@@ -40,4 +50,4 @@ Canonical real-Neon result examples:
 - Browser conditional: `99c63bbe-3225-4feb-97bc-1bb59fa30a7d`.
 - Browser relationship: `73712f04-92f3-4c8e-83df-89c020f8345b`.
 
-Next actions: authenticate Render/Vercel, publish tested source in the controlled deployment sequence, deploy the Blueprint, configure the same shared secret and actual API URL in the existing Vercel project, then run public-domain QA. See [exact deployment checklist](hypothesis-production.md). Public health, actual Render runtime and public cold-start behavior are deliberately **not** claimed verified yet.
+Deployment configuration follows main going forward. Render's idle sleep/wake latency remains unmeasured; first-worker cold and warm execution were measured above. Saved-result viewing is independent of Render execution; local verification with Python fully stopped is retained above. See [deployment checklist](hypothesis-production.md).
