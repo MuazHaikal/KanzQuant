@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         ...factors.map(f=>({label:f[0].toUpperCase()+f.slice(1),href:"/focus/factor/"+f,kind:"Factor"})),
         ...catalogue.map(s=>({label:s.externalId+" · "+s.name,href:"/data?q="+encodeURIComponent(s.externalId),kind:"Series",keywords:s.category+" "+snapshot.features.filter(f=>f.source===s.externalId).map(f=>f.group+" "+f.description).join(" ")})),
         ...(snapshot.state_vectors??[]).filter(v=>v.date<snapshot.as_of).map(v=>({label:v.date,href:"/focus/analogue/"+v.date,kind:"Historical date"})),
-        ...[["Overview","/"],["Macro","/macro"],["Similarity","/similarity"],["Regimes","/regimes"],["Hypothesis Lab","/hypothesis"],["Data / Series","/data"],["Experiments","/experiments"]].map(([label,href])=>({label,href,kind:"Module"}))
+        ...[["Overview","/"],["Indicators","/macro"],["Similar Periods","/similarity"],["Market Environment","/regimes"],["Test an Idea","/hypothesis"],["Data Catalogue","/data"],["Market History","/focus/market"],["Experiments","/experiments"]].map(([label,href])=>({label,href,kind:"Module"}))
       ]}>{children}</AppShell></body>
     </html>
   );

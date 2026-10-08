@@ -1,6 +1,6 @@
 {
   "name": "kanzquant",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test:focus": "node --env-file=.env.local scripts/test_focus.mjs",
     "test:context": "node --env-file=.env.local scripts/test_context.mjs",
+    "test:visual": "node scripts/test_visual.mjs",
     "test:market": "node --env-file=.env.local scripts/test_market.mjs",
     "test:hypothesis": "node --env-file=.env.local scripts/test_hypothesis.mjs",
     "test:hypothesis-service": "node --env-file=.env.local scripts/test_hypothesis_service.mjs",

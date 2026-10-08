@@ -2,11 +2,10 @@ import Link from "next/link";
 import { DrillRow } from "@/components/drill-row";
 import { MethodologyDisclosure, PageHead, Panel, ReturnHeat } from "@/components/ui";
 import { MarketChart } from "@/components/market-chart";
+import { HistoricalPositionBar, MoveIntensityBar, OutcomeHorizonTiles, SimilarityStrip } from "@/components/visual-research";
 import { getMarketWindow } from "@/lib/market-data";
-import { MoveLabel, Tip } from "@/components/context-labels";
-import { number } from "@/components/focus-panels";
 import { getResearchSnapshot, regimeColor } from "@/lib/research-data";
-import { factors } from "@/lib/focus-math";
+import { factors, horizons } from "@/lib/focus-math";
 import { factorContext } from "@/lib/factor-context";
 
 export default async function Overview() {
@@ -14,12 +13,24 @@ export default async function Overview() {
   const contexts=factors.map(f=>factorContext(data,f));
   const attention=[...contexts].sort((a,b)=>b.priority-a.priority).slice(0,3);
   return <><PageHead section="Research workspace / Overview" title="US Macro Monitor" meta={`Research as of ${data.as_of}`}/>
-    <section className="current-read" aria-label="Current Read"><div className="read-label">Current Read<span>What deserves attention</span></div><Link href="/focus/regime"><small>Current regime</small><strong>{data.current_regime}</strong><span>{(data.confidence*100).toFixed(0)}% regime strength</span></Link>{attention.map(c=>{const move=[...c.moves].sort((a,b)=>(b.percentile??-1)-(a.percentile??-1))[0];return <Link href={"/focus/factor/"+c.factor} key={c.factor}><small>{c.factor}</small><strong>{c.state}</strong><span>{(move.percentile??0)>=75?`${move.horizon}M ${move.classification.toLowerCase()} ${move.change!<0?"decline":"rise"}`:c.trend.label}</span></Link>;})}<Link href="/focus/returns/12m"><small>12M analogue SPX</small><strong>{number(summary.median?.["12m"],"%")}</strong><span>Historical median · N={summary.n?.["12m"]??0}</span></Link></section>
-    <div className="grid overview-grid">
-      <Panel title="Factor attention" meta="Level vs movement · select a factor ↗" className="state-panel" noPad><table className="data-table attention-table"><thead><tr><th>Factor</th><th>Current level</th><th>3M change</th><th>Move rarity</th><th>State / trend</th></tr></thead><tbody>{contexts.map(c=><DrillRow href={"/focus/factor/"+c.factor} key={c.factor} className={c.attention?"attention-row":""}><td><span className={c.attention?"attention-mark":"quiet-mark"}>●</span> <span className="factor-name">{c.factor}</span> ↗</td><td><strong>{number(c.current,"σ")}</strong><small>Level P{c.percentile?.toFixed(0)??"N/A"}</small></td><td><strong className={c.moves[1].change!<0?"delta-down":"delta-up"}>{number(c.moves[1].change,"σ")}</strong><small>{c.trend.label}</small></td><td><MoveLabel move={c.moves[1]}/>{c.moves.filter(m=>m.horizon!==3&&(m.percentile??0)>=90).map(m=><small key={m.horizon}>{m.horizon}M {m.classification.toLowerCase()}</small>)}</td><td>{c.state}<small>{c.attention?"Inspect signal":"Within usual range"}</small></td></DrillRow>)}</tbody></table><div className="footer-note"><Tip text="Level percentile ranks the current factor value in all available history. Move percentile ranks the absolute change against prior changes of the same horizon. Neither is a probability or significance test.">Level P = historical position · Move P = size of change ⓘ</Tip></div></Panel>
-      <Panel title="Closest historical analogues" meta="SPX price outcomes · not forecasts" className="analog-panel" noPad><table className="data-table overview-analogues"><thead><tr><th>Date</th><th>Similarity</th><th>Regime</th><th>3M SPX</th><th>12M SPX</th></tr></thead><tbody>{data.neighbours.slice(0,6).map(row=><DrillRow href={"/focus/analogue/"+row.date} key={row.date}><td>{row.date} ↗</td><td className="score">{(row.similarity*100).toFixed(1)}</td><td><span className="regime-tag" style={{borderColor:regimeColor(row.regime)}}>{row.regime}</span></td>{["3m","12m"].map(h=><td key={h}>{row.returns.SPX?.[h]===null||row.returns.SPX?.[h]===undefined?"N/A":<ReturnHeat value={row.returns.SPX[h]!}/>}</td>)}</DrillRow>)}</tbody></table><div className="footer-note">State-vector similarity · 9M episode spacing · click to compare</div></Panel>
-      <Panel title="S&P 500 / regime history" meta="Daily OHLC · expand ↗" className="chart-panel" noPad><MarketChart initial={market} assetControl={false} regimes={data.regime_history.map(r=>({date:r.date,label:r.label,color:regimeColor(r.label)}))} height={160}/><div className="overview-chart-link"><Link href="/focus/market">Open market history ↗</Link></div></Panel>
-      <Panel title="Conditional SPX outcomes" meta="Nearest analogues · descriptive" className="returns-panel" noPad><div className="outcome-cards">{["1m","3m","6m","12m"].map(h=><Link key={h} href={"/focus/returns/"+h}><span>{h.toUpperCase()} SPX <span className="focus-arrow">↗</span></span><strong className={(summary.median?.[h]??0)>=0?"delta-up":"delta-down"}>{number(summary.median?.[h],"%")}</strong><small>Median price return</small><div>{summary.hit_rate?.[h]?.toFixed(0)??"N/A"}% positive <span>N={summary.n?.[h]??0}</span></div></Link>)}</div><div className="footer-note">Observed historical outcomes, not an expected return.</div></Panel>
+    <div className="visual-overview">
+      <Panel title="Market environment" meta={`${data.current_regime} · ${(data.confidence*100).toFixed(0)}% regime strength`} className="environment-panel" noPad>
+        <div className="factor-tiles">{contexts.map(c=><Link className="factor-tile" key={c.factor} href={"/focus/factor/"+c.factor}><div className="tile-kicker">{c.factor}<span>↗</span></div><HistoricalPositionBar percentile={c.percentile} value={c.current}/><MoveIntensityBar percentile={c.moves[1].percentile} change={c.moves[1].change} compact/></Link>)}</div>
+      </Panel>
+      <Panel title="What stands out" meta="Existing signal priority · top 3" className="standout-panel" noPad><div className="standout-tiles">{attention.map(c=>{
+        const move=[...c.moves].sort((a,b)=>(b.percentile??-1)-(a.percentile??-1))[0];
+        const showMove=(move.percentile??0)>=90;
+        return <Link key={c.factor} href={"/focus/factor/"+c.factor}><div className="tile-kicker">{c.factor}<span>↗</span></div><small>{showMove?`Recent ${move.horizon}M move`:"Historical level"}</small>{showMove?<MoveIntensityBar percentile={move.percentile} change={move.change} horizon={move.horizon} compact/>:<HistoricalPositionBar percentile={c.percentile} value={c.current} compact/>}</Link>;
+      })}</div></Panel>
+      <Panel title="Similar periods" meta="SIMILARITY · NOT PROBABILITY" className="periods-panel" noPad>
+        <SimilarityStrip rows={data.neighbours.slice(0,6).map(r=>({date:r.date,similarity:r.similarity,state:r.regime,href:"/focus/analogue/"+r.date}))}/>
+        <details className="numeric-details"><summary>Exact outcomes / historical states</summary><div className="local-table-scroll"><table className="data-table"><thead><tr><th>Date</th><th>Similarity</th><th>State</th><th>3M SPX</th><th>12M SPX</th></tr></thead><tbody>{data.neighbours.map(r=><DrillRow href={"/focus/analogue/"+r.date} key={r.date}><td>{r.date} ↗</td><td>{(r.similarity*100).toFixed(1)}%</td><td>{r.regime}</td>{["3m","12m"].map(h=><td key={h}>{r.returns.SPX?.[h]==null?"N/A":<ReturnHeat value={r.returns.SPX[h]!}/>}</td>)}</DrillRow>)}</tbody></table></div></details>
+      </Panel>
+      <Panel title="What happened next" meta="SPX · SIMILAR PERIODS" className="outcomes-panel" noPad>
+        <OutcomeHorizonTiles items={horizons.map(h=>({horizon:h,median:summary.median?.[h]??null,hit:summary.hit_rate?.[h]??null,n:summary.n?.[h]??0,values:data.neighbours.flatMap(r=>r.returns.SPX?.[h]==null?[]:[r.returns.SPX[h]!]),href:"/focus/returns/"+h}))}/>
+        <div className="footer-note">Historical observations · Not a forecast</div>
+      </Panel>
+      <Panel title="Market history" meta="SPX · YAHOO FINANCE" className="history-panel" noPad><MarketChart initial={market} assetControl={false} regimes={data.regime_history.map(r=>({date:r.date,label:r.label,color:regimeColor(r.label)}))} height={120}/><div className="overview-chart-link"><Link href="/focus/market">Inspect market history ↗</Link><Link href="/focus/regime">Market states ↗</Link></div></Panel>
       <MethodologyDisclosure/>
     </div></>;
 }

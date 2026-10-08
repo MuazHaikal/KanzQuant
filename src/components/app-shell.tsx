@@ -8,9 +8,10 @@ import { GlobalSearch, type SearchItem } from "./global-search";
 export type ShellTicker = [label: string, value: string, delta: string, tone: "up" | "down" | "warn"];
 
 const groups = [
-  { label:"WORKSPACE", items:[["Overview","/","01"],["Macro","/macro","02"],["Similarity","/similarity","03"],["Regimes","/regimes","04"]] },
-  { label:"RESEARCH", items:[["Hypothesis Lab","/hypothesis","05"],["Factors","#","06"],["Strategies","#","07"],["Portfolio","#","08"],["Risk","#","09"]] },
-  { label:"SYSTEM", items:[["Data / Series","/data","10"],["Experiments","/experiments","11"]] },
+  { label:"WORKSPACE", items:[["Overview","/","01"]] },
+  { label:"RESEARCH", items:[["Market Environment","/regimes","02"],["Similar Periods","/similarity","03"],["Test an Idea","/hypothesis","04"]] },
+  { label:"DATA", items:[["Indicators","/macro","05"],["Market History","/focus/market","06"],["Data Catalogue","/data","07"]] },
+  { label:"SYSTEM", items:[["Experiments","/experiments","08"]] },
 ];
 
 export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCount, searchItems }: {
@@ -32,11 +33,11 @@ export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCo
     </div>
     <aside className="sidebar">
       {groups.map((group) => <div key={group.label}><div className="nav-section">{group.label}</div>{group.items.map(([label,href,code]) => {
-        const active = href === "/" ? path === "/" || path.startsWith("/focus") : path.startsWith(href);
+        const active = href === "/" ? path === "/" || (path.startsWith("/focus") && !path.startsWith("/focus/market")) : path.startsWith(href);
         const disabled = href === "#";
         return <Link aria-disabled={disabled} tabIndex={disabled ? -1 : 0} onClick={disabled ? (e)=>e.preventDefault() : undefined} className={`nav-link ${active ? "active" : ""} ${disabled ? "disabled" : ""}`} href={href} key={label}><span className="nav-icon">{code}</span>{label}</Link>;
       })}</div>)}
-      <div className="sidebar-foot">KANZQUANT v0.2<br/>ENGINE · ONLINE<br/>DATA · {seriesCount} SERIES</div>
+      <div className="sidebar-foot">KANZQUANT v0.3.0<br/>ENGINE · ONLINE<br/>DATA · {seriesCount} SERIES</div>
     </aside>
     <main className="main">{children}</main>
   </div>;
