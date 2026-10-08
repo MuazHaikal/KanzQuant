@@ -1,6 +1,6 @@
-# KanzQuant v0.3 — local Visual Research UX verification
+# KanzQuant v0.3 — Visual Research UX verification
 
-Presentation-only redesign, verified 9 October 2026. Not pushed or deployed.
+Presentation-only redesign, verified locally and released to production on 9 October 2026.
 
 ## Visual system
 
@@ -68,15 +68,16 @@ Chrome occasionally timed out or produced tiled screenshot capture artifacts aft
 viewport changes. Captures were retried; DOM layout checks confirmed single page
 headings and no page-level overflow. These were capture issues, not duplicated UI.
 
-## Local inspection links
+## Production links
 
-- [Overview](http://localhost:3000/)
-- [Growth](http://localhost:3000/focus/factor/growth)
-- [Credit](http://localhost:3000/focus/factor/credit)
-- [Builder](http://localhost:3000/hypothesis)
-- [Conditional result](http://localhost:3000/hypothesis/678ff0ee-80b2-460e-8e39-92977c221774)
-- [Robustness](http://localhost:3000/hypothesis/678ff0ee-80b2-460e-8e39-92977c221774?view=robustness)
-- [Relationship](http://localhost:3000/hypothesis/0712c340-5230-46d1-9926-c84230ae3c05)
+- [Overview](https://kanz-quant.vercel.app/)
+- [Growth](https://kanz-quant.vercel.app/focus/factor/growth)
+- [Credit](https://kanz-quant.vercel.app/focus/factor/credit)
+- [Builder](https://kanz-quant.vercel.app/hypothesis)
+- [Conditional result](https://kanz-quant.vercel.app/hypothesis/678ff0ee-80b2-460e-8e39-92977c221774)
+- [Robustness](https://kanz-quant.vercel.app/hypothesis/678ff0ee-80b2-460e-8e39-92977c221774?view=robustness)
+- [Relationship](https://kanz-quant.vercel.app/hypothesis/0712c340-5230-46d1-9926-c84230ae3c05)
 
-The production build is running locally on port 3000. Inspection of the redesigned
-UX is still the user's next step; this is not a deployment approval.
+GitHub `main` is connected to the existing Vercel project `kanz-quant`. Public
+verification confirmed the v0.3.0 label, database-backed content, healthy API,
+and no visible demo labels on the principal research routes.
