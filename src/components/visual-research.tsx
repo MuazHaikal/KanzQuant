@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { humanName } from "@/lib/guided-research";
 import { levelState, moveClassification } from "@/lib/factor-context";
 import { quantile } from "@/lib/focus-math";
 import type { HypothesisParameters, HypothesisStats } from "@/lib/hypothesis-types";
@@ -69,18 +70,26 @@ export function conditionLabels(p:HypothesisParameters) {
   return p.conditions.map(c=>`${c.source.toUpperCase()} · ${c.metric==="level"?"level":c.metric+"M change"}${p.mode==="relationship"?"":` · ${{below:"below P",above:"above P",lt:"< ",gt:"> ",state:"",rising:"rising",falling:"falling"}[c.op]??c.op}${["rising","falling"].includes(c.op)?"":c.threshold}`}`);
 }
 
+function humanCondition(c:HypothesisParameters["conditions"][number],mode:HypothesisParameters["mode"]) {
+  const metric=c.metric==="level"?"Level":c.metric+"-month change";
+  if(mode==="relationship")return metric;
+  if(c.op==="state")return String(c.threshold);
+  if(c.op==="rising"||c.op==="falling")return c.op==="rising"?"Rise":"Decline";
+  if(c.op==="below"||c.op==="above"){const direction=c.op==="below"?"Low":"High";return c.metric==="level"?direction:(c.op==="below"?"Decline":"Rise");}
+  return (c.op==="lt"?"Below":"Above")+" selected value";
+}
 export function ConditionalDiagram({parameters:p,summary:s}: {parameters:HypothesisParameters;summary?:HypothesisStats}) {
   const result=!!s && p.mode==="conditional", full=p.baseline==="full";
   return <div className={`conditional-diagram ${result?"result-diagram":"builder-diagram"}`} aria-label={result?"Condition and historical group comparison":"Research design"}>
-    <div className="diagram-conditions">{conditionLabels(p).map((label,i)=><div className="diagram-condition" key={i}><small>{p.mode==="relationship"?"INPUT":`CONDITION ${i+1}`}</small><strong>{label}</strong></div>)}</div>
+    <div className="diagram-conditions">{conditionLabels(p).map((label,i)=><div className="diagram-condition" key={i}><small>{p.mode==="relationship"?"INPUT":`CONDITION ${i+1}`}</small><strong>{humanName(p.conditions[i].source)} · {humanCondition(p.conditions[i],p.mode)}</strong><small>{label}</small></div>)}</div>
     <div className="diagram-merge"><span>{p.conditions.length>1?"AND · ALL CONDITIONS":result?"HISTORICAL CASES":"↓"}</span></div>
-    {result?<><div className="diagram-branches"><div><small>EVENT PERIODS</small><strong>{exact(s.event?.mean,"%")}</strong><span>Mean · N={s.event?.n??0}</span></div><div><small>{full?"FULL HISTORICAL SAMPLE":"OTHER PERIODS"}</small><strong>{exact(s.baseline?.mean,"%")}</strong><span>Mean · N={s.baseline?.n??0}</span></div></div>{full?<div className="diagram-baseline-note">Includes event periods · overlapping groups, not independent</div>:null}<div className="diagram-difference"><small>{p.asset} {p.horizon}M · MEAN DIFFERENCE</small><strong className={(s.difference??0)<0?"delta-down":"delta-up"}>{exact(s.difference," pp")}</strong></div></>:<><div className="diagram-cases">{p.mode==="relationship"?"SPACED PAIRED OBSERVATIONS":"QUALIFYING HISTORICAL CASES"}</div><div className="diagram-target"><strong>{p.asset}</strong><span>FORWARD RETURN</span><strong>{p.horizon}M</strong></div></>}
+    {result?<><div className="diagram-branches"><div><small>EVENT PERIODS</small><strong>{exact(s.event?.mean,"%")}</strong><span>Mean · N={s.event?.n??0}</span></div><div><small>{full?"FULL HISTORICAL SAMPLE":"OTHER PERIODS"}</small><strong>{exact(s.baseline?.mean,"%")}</strong><span>Mean · N={s.baseline?.n??0}</span></div></div>{full?<div className="diagram-baseline-note">Includes event periods · overlapping groups, not independent</div>:null}<div className="diagram-difference"><small>{humanName(p.asset)} · {p.horizon} months · MEAN DIFFERENCE</small><strong className={(s.difference??0)<0?"delta-down":"delta-up"}>{exact(s.difference," pp")}</strong></div></>:<><div className="diagram-cases">{p.mode==="relationship"?"SPACED PAIRED OBSERVATIONS":"QUALIFYING HISTORICAL CASES"}</div><div className="diagram-target"><strong>{humanName(p.asset)}</strong><small>{p.asset}</small><span>FORWARD RETURN</span><strong>{p.horizon}M</strong></div></>}
   </div>;
 }
 
 export function ContributionBars({rows}: {rows:{name:string;value:number|null}[]}) {
   const extent=Math.max(...rows.map(r=>Math.abs(r.value??0)),.001);
-  return <div className="contribution-bars">{rows.map(r=><div key={r.name} className="contribution-row"><span>{r.name}</span><div className="signed-track" role="img" aria-label={`${r.name} input contribution ${exact(r.value,"σ")}`}><i className="zero-axis"/>{valid(r.value)?<b className={r.value<0?"negative":"positive"} style={{left:r.value<0?(50-Math.abs(r.value)/extent*49)+"%":"50%",width:Math.abs(r.value)/extent*49+"%"}}/>:null}</div><strong>{exact(r.value,"σ")}</strong></div>)}<div className="visual-detail">Input contribution · arithmetic decomposition, not causation</div></div>;
+  return <div className="contribution-bars">{rows.map(r=><div key={r.name} className="contribution-row"><span>{r.name.replaceAll("SPX","S&P 500")}</span><div className="signed-track" role="img" aria-label={`${r.name} input contribution ${exact(r.value,"σ")}`}><i className="zero-axis"/>{valid(r.value)?<b className={r.value<0?"negative":"positive"} style={{left:r.value<0?(50-Math.abs(r.value)/extent*49)+"%":"50%",width:Math.abs(r.value)/extent*49+"%"}}/>:null}</div><strong>{exact(r.value,"σ")}</strong></div>)}<div className="visual-detail">Input contribution · arithmetic decomposition, not causation</div></div>;
 }
 
 export type OutcomeTile={horizon:string;median:number|null;hit:number|null;n:number;values?:number[];href?:string};

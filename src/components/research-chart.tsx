@@ -9,7 +9,7 @@ type Series = {name:string;points:Point[];color?:string};
 export type ChartContext = {date:string;regime:string;factors:Record<string,number|null>};
 const colors = ["var(--teal)","var(--cyan)","var(--warning)"];
 const emptyPoints: Point[] = [];
-export function ResearchChart({series,height:pixelHeight=200,zero=false,regimes=[],inspectDates=[],initialStart,persistKey,context=[]}:{series:Series[];height?:number;zero?:boolean;regimes?:{date:string;color:string}[];inspectDates?:string[];initialStart?:string;persistKey?:string;context?:ChartContext[]}) {
+export function ResearchChart({series,height:pixelHeight=200,zero=false,regimes=[],inspectDates=[],initialStart,persistKey,context=[],explorerId}:{series:Series[];height?:number;zero?:boolean;regimes?:{date:string;color:string}[];inspectDates?:string[];initialStart?:string;persistKey?:string;context?:ChartContext[];explorerId?:string}) {
   const all=series[0]?.points??emptyPoints,max=Math.max(0,all.length-1),id=useId();
   const initial:Domain=[initialStart?Math.max(0,all.findIndex(p=>p.date>=initialStart)):0,max];
   const [domain,setDomain]=useState<Domain>(initial),[selected,setSelected]=useState<number|null>(null),[overlay,setOverlay]=useState("");
@@ -87,7 +87,7 @@ export function ResearchChart({series,height:pixelHeight=200,zero=false,regimes=
       </g>
       <text x="48" y={height-6}>{visible[0]?.date}</text><text x="948" textAnchor="end" y={height-6}>{visible.at(-1)?.date}</text>
     </svg><div ref={tip} className="chart-hover" style={{display:"none"}}/></div>
-    <div className="chart-context">{active.map((s,i)=><span key={s.name} style={{color:s.color??colors[i%3]}}>{i===1?"┄":i===2?"···":"━"} {s.name.replace("Overlay:","")}</span>)}{zero&&<span>Zero · ±1 / ±2 · median {median.toFixed(2)}</span>}<span className="chart-help">Drag to pan · wheel to zoom · double-click to fit</span></div>
+    <div className="chart-context">{active.map((s,i)=><span key={s.name} style={{color:s.color??colors[i%3]}}>{i===1?"┄":i===2?"···":"━"} {s.name.replace("Overlay:","")}</span>)}{zero&&<span>Zero · ±1 / ±2 · median {median.toFixed(2)}</span>}<Link className="chart-help" href={"/chart?series="+encodeURIComponent(explorerId??series[0]?.name.toLowerCase().split(" ")[0]??"growth")}>↗ EXPAND CHART</Link></div>
     {point&&<div className="point-detail"><strong>{point.date}</strong>{active.map((s,i)=><span key={s.name}>{s.name.replace("Overlay:","")} {maps[i].get(point.date)?.toFixed(3)??"N/A"}</span>)}{zero&&<><span>Level P{levelPercentile(all.filter(p=>p.date<=point.date).map(p=>p.value),point.value)?.toFixed(0)??"N/A"}</span><span>3M Δ {pointMove?.change?.toFixed(3)??"N/A"} · {pointMove?.classification}{pointMove?.percentile!==null&&pointMove?.percentile!==undefined?" (P"+pointMove.percentile.toFixed(0)+")":""}</span></>}{detail&&<><span>{detail.regime}</span><span>{Object.entries(detail.factors).map(([f,v])=>f+" "+(v?.toFixed(2)??"N/A")).join(" · ")}</span></>}{inspectDates.includes(point.date)&&<Link href={"/focus/analogue/"+point.date}>Open analogue ↗</Link>}<button aria-label="Clear selected point" onClick={()=>setSelected(null)}>×</button></div>}
   </div>;
 }

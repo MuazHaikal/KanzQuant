@@ -135,6 +135,8 @@ export class MarketCanvas {
       // A slim strip, not a candle-obscuring backdrop; map monthly descriptive labels to their own month.
       for (let i = start; i <= end; i++) { const regime = this.regimeMap.get(bars[i].end.slice(0, 7)); if (regime) { ctx.fillStyle = regime.color; ctx.globalAlpha = .55; ctx.fillRect(x(i) - plotWidth / span / 2, bottom - 4, Math.max(1, plotWidth / span), 4); } }
       ctx.globalAlpha = 1;
+      ctx.fillStyle = text; ctx.font = "9px sans-serif"; ctx.fillText("MARKET STATE", left + 3, bottom - 8);
+      if (bars[start]?.end < this.model.regimes[0].date) ctx.fillText("NO STATE DATA", left + 90, bottom - 8);
     }
     if (pathSlices) {
       for (let s = 0; s < pathSlices.length; s++) {

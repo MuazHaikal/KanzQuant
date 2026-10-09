@@ -4,8 +4,8 @@ export function PageHead({ section, title, meta="03 JAN 2025 · 14:22 UTC" }: {s
   return <div className="page-head"><div><div className="eyebrow">{section}</div><h1 className="page-title">{title}</h1></div><div className="head-meta"><span>{meta}</span><span className="pill live">LATEST RUN COMPLETE</span></div></div>;
 }
 
-export function Panel({ title, meta, children, className="", noPad=false }: {title:string;meta?:string;children:React.ReactNode;className?:string;noPad?:boolean}) {
-  return <section className={`panel ${className}`}><div className="panel-head"><h2 className="panel-title">{title}</h2>{meta ? <span className="panel-meta">{meta}</span> : null}</div><div className={`panel-body ${noPad ? "no-pad" : ""}`}>{children}</div></section>;
+export function Panel({ title, meta, children, className="", noPad=false,id }: {title:string;meta?:string;children:React.ReactNode;className?:string;noPad?:boolean;id?:string}) {
+  return <section id={id} className={`panel ${className}`}><div className="panel-head"><h2 className="panel-title">{title}</h2>{meta ? <span className="panel-meta">{meta}</span> : null}</div><div className={`panel-body ${noPad ? "no-pad" : ""}`}>{children}</div></section>;
 }
 
 export function LineChart({ data, secondary, height=170, label="Time series chart" }: {data:Point[];secondary?:Point[];height?:number;label?:string}) {
@@ -25,6 +25,7 @@ export function MethodologyDisclosure() {
     <summary><span>Methodology / limitations</span><span className="disclosure-action" aria-hidden="true">VIEW NOTES +</span></summary>
     <div className="disclosure-grid">
       <span>SIMILARITY · DESCRIPTIVE, NOT A FORECAST</span>
+      <span>DATA SOURCES · FRED · YAHOO FINANCE · NEON</span>
       <span>SPX · PRICE RETURNS, DIVIDENDS EXCLUDED</span>
       <span>FRED · SIMPLIFIED RELEASE LAGS, NOT VINTAGE DATA</span>
       <span>REGIMES · FULL-HISTORY DESCRIPTIVE, NOT WALK-FORWARD</span>

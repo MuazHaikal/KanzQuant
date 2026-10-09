@@ -15,7 +15,8 @@ function module(path, dependencies={}) {
 }
 const math=module("src/lib/focus-math.ts");
 const context=module("src/lib/factor-context.ts",{"./focus-math":math});
-const ui=module("src/components/visual-research.tsx",{"@/lib/factor-context":context,"@/lib/focus-math":math,"next/link":{default:({href,children,...props})=>React.createElement("a",{href,...props},children)}});
+const guided=module("src/lib/guided-research.ts",{"./focus-math":math,"./factor-context":context,"./hypothesis-types":module("src/lib/hypothesis-types.ts")});
+const ui=module("src/components/visual-research.tsx",{"@/lib/factor-context":context,"@/lib/focus-math":math,"@/lib/guided-research":guided,"next/link":{default:({href,children,...props})=>React.createElement("a",{href,...props},children)}});
 const render=(name,props)=>renderToStaticMarkup(React.createElement(ui[name],props));
 
 for(const [p,label] of [[0,"Very low"],[10,"Very low"],[10.01,"Low"],[25,"Low"],[25.01,"Normal"],[74.99,"Normal"],[75,"High"],[89.99,"High"],[90,"Very high"],[99,"Very high"],[100,"Very high"],[null,"N/A"],[NaN,"N/A"]]) {
