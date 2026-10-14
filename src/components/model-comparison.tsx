@@ -1,5 +1,5 @@
 import type { Metrics } from "@/lib/forecast-types";
-const delta=(n:number)=>Math.abs(n)>0&&Math.abs(n)<.1?n.toPrecision(2):n.toFixed(1);
+const delta=(n:number)=>Math.abs(n)<.005?"0.0":Math.abs(n)<.1?n.toFixed(2):n.toFixed(1);
 const value=(n:number|null|undefined)=>n==null?"—":n.toFixed(3);
 export function ModelComparison({models}:{models:{name:string;metrics:Metrics;status:string}[]}){
  const max=Math.max(...models.map(m=>m.metrics.rmse??0),.001);
