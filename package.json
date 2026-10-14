@@ -1,6 +1,6 @@
 {
   "name": "kanzquant",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,6 +11,8 @@
     "test:focus": "node --env-file=.env.local scripts/test_focus.mjs",
     "test:context": "node --env-file=.env.local scripts/test_context.mjs",
     "test:guided": "node scripts/test_guided.mjs",
+    "test:forecast": "node --env-file=.env.local scripts/test_forecast.mjs",
+    "test:forecast-ui": "node scripts/test_forecast_ui.mjs",
     "test:visual": "node scripts/test_visual.mjs",
     "test:market": "node --env-file=.env.local scripts/test_market.mjs",
     "test:hypothesis": "node --env-file=.env.local scripts/test_hypothesis.mjs",

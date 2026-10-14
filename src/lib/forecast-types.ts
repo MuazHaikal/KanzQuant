@@ -1,0 +1,18 @@
+export const forecastSeries = ["SPX","GLD","IEF","growth","inflation","rates","credit","liquidity","volatility","FEDFUNDS","DGS2","DGS10","T10Y2Y","CPIAUCSL","CPILFESL","PCEPI","UNRATE","PAYEMS","ICSA","INDPRO","RSAFS","GDPC1","BAA10Y","M2SL","WALCL","VIXCLS","DTWEXBGS"];
+export type ForecastSpec = {series:string;horizon:number;confidence:number;training_start:string};
+export function validateForecast(input:unknown):ForecastSpec {
+ if(!input||typeof input!=="object"||Array.isArray(input))throw Error("Invalid forecast settings");
+ const p=input as Record<string,unknown>;
+ if(Object.keys(p).some(k=>!["series","horizon","confidence","training_start"].includes(k))||!forecastSeries.includes(String(p.series))||![1,3,6,12].includes(Number(p.horizon))||typeof p.horizon!=="number"||p.series==="GDPC1"&&p.horizon===1||![80,95].includes(Number(p.confidence??95)))throw Error("Invalid forecast settings");
+ const start=String(p.training_start??"");if(start&&(!/^\d{4}-\d{2}-\d{2}$/.test(start)||!Number.isFinite(Date.parse(start))||new Date(start).toISOString().slice(0,10)!==start))throw Error("Invalid training start");
+ return {series:String(p.series),horizon:Number(p.horizon),confidence:Number(p.confidence??95),training_start:start};
+}
+export type ForecastPoint={date:string;value:number;lower?:number|null;upper?:number|null};
+export type ForecastRow={origin:string;training_start:string;training_n:number;date:string;actual:number;forecast:number;lower:number|null;upper:number|null;order:number[]|null};
+export type Metrics={n:number;mae:number|null;rmse:number|null;coverage:number|null;mae_delta?:number|null;rmse_delta?:number|null};
+export type Correlations={acf:number[];pacf:number[];bound:number|null};
+export type Stationarity={statistic?:number;p?:number;n?:number;lags?:number;interpretation?:string;note?:string;status?:string};
+export type ForecastModel={name:string;status:string;rows:ForecastRow[];metrics:Metrics;verdict?:string;comparison_baseline?:Metrics;failures:{origin:string;reason:string}[];forecast:ForecastPoint[];current_error?:string;details?:{aic?:number;bic?:number;coefficients?:Record<string,number>;scaling?:{center:number;scale:number}};residuals?:Correlations&{history:number[];ljung_box?:{lag:number;model_df:number;statistic:number;p:number;interpretation:string}};rolling_error:ForecastPoint[]};
+export type ForecastResult={engine:string;status:string;reason?:string;specification:ForecastSpec;policy:{target:string;transform:string;frequency:string;period_months:number;baseline:string;unit:string;minimum_train:number;maximum_history:number};as_of:string;data_hash:string;history:ForecastPoint[];models:ForecastModel[];lowest_tested?:string|null;conclusion?:string;validation?:{scheme:string;training_start:string;initial_training_end:string;evaluation_start:string;evaluation_end:string;origins:number;spacing_periods:number;selection:string;selected_order:number[]|null;candidates:{order:number[];bic:number|null;status:string}[];target:string};diagnostics?:Correlations&{n:number;ADF:Stationarity;KPSS:Stationarity};timing:{compute_ms?:number;fit_count?:number;walk_forward_fits?:number;candidate_count?:number};software:Record<string,string>};
+export type ForecastRun={id:string;name:string;parameters:ForecastSpec;status:string;started_at:string;metadata:Record<string,unknown>;result:ForecastResult|null};
+export const forecastTarget=(id:string)=>["SPX","GLD","IEF"].includes(id)?"Monthly price return":["CPIAUCSL","CPILFESL","PCEPI","PAYEMS","ICSA","INDPRO","RSAFS","GDPC1","M2SL","WALCL"].includes(id)?"Year-over-year growth":["growth","inflation","rates","credit","liquidity","volatility"].includes(id)?"Factor level":"Level";

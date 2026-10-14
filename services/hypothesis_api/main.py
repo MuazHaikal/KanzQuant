@@ -32,6 +32,9 @@ def create_app(executor=None,secret=None,origins=None):
         else:
             app.state.executor=executor
         app.state.executor.open()
+        if hasattr(app.state.executor,"pool"):
+            from .forecast_execution import ForecastExecutor
+            app.state.forecaster=ForecastExecutor(app.state.executor)
         yield
         app.state.executor.close()
 
@@ -40,7 +43,7 @@ def create_app(executor=None,secret=None,origins=None):
 
     @app.middleware("http")
     async def request_guard(request:Request,call_next):
-        if request.url.path=="/v1/hypothesis/run":
+        if request.url.path in {"/v1/hypothesis/run","/v1/forecast/run"}:
             origin=request.headers.get("origin")
             if origin and origin not in allowed:
                 return JSONResponse({"error":"Origin not allowed"},status_code=403)
@@ -87,6 +90,20 @@ def create_app(executor=None,secret=None,origins=None):
         except Exception as error:
             log_exception(run_id,error)
             raise HTTPException(503,"Research service temporarily unavailable") from None
+    @app.post("/v1/forecast/run")
+    def forecast(body:ExecutionRequest,request:Request):
+        run_id=str(body.run_id)
+        if not verify_token(run_id,body.token,secret,purpose="forecast"):
+            raise HTTPException(401,"Execution authorization failed")
+        try:
+            return request.app.state.forecaster.execute(run_id)
+        except UnknownRun:
+            raise HTTPException(404,"Forecast experiment unavailable") from None
+        except ExecutionBusy:
+            raise HTTPException(429,"Research engine busy; retry this saved experiment",headers={"Retry-After":"3"}) from None
+        except Exception as error:
+            log_exception(run_id,error)
+            raise HTTPException(503,"Forecast service temporarily unavailable") from None
     return app
 
 app=create_app()

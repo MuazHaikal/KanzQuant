@@ -13,6 +13,11 @@ def canonical_worker(requests, responses):
     while True:
         data,parameters=requests.get()
         try:
-            responses.put((True,serialize(run(data,parameters)),None))
+            if data.get("kind")=="forecast":
+                from research.forecast.engine import run as forecast
+                value=forecast(data,parameters)
+            else:
+                value=run(data,parameters)
+            responses.put((True,serialize(value),None))
         except Exception as error:
             responses.put((False,None,redact("".join(traceback.format_exception(error)))))

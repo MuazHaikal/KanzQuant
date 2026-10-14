@@ -102,7 +102,9 @@ class Executor:
             raise RuntimeError("Canonical hypothesis engine failed")
         if len(json.dumps(value,allow_nan=False))>2000000:
             raise ValueError("Research result exceeded safe size")
-        if value.get("technical",{}).get("engine")!=ENGINE:
+        expected="forecast-0.4.0" if data.get("kind")=="forecast" else ENGINE
+        actual=value.get("engine") if data.get("kind")=="forecast" else value.get("technical",{}).get("engine")
+        if actual!=expected:
             raise ValueError("Unexpected research engine response")
         return value
 
