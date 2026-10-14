@@ -1,1 +1,1 @@
-export default function Loading(){return <div className="forecast-status" role="status">Loading series research…</div>;}
+export default function Loading(){return <div className="research-loading" role="status" aria-label="Loading series research"><span>Loading series research…</span><div aria-hidden="true" className="loading-spec"/><div aria-hidden="true" className="loading-chart"/></div>;}

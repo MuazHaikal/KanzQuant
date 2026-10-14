@@ -7,6 +7,8 @@ import { getSeriesCatalogue } from "@/lib/database";
 import { factors } from "@/lib/focus-math";
 import "./globals.css";
 import "./forecast.css";
+import "./workstation.css";
+import "./composition.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

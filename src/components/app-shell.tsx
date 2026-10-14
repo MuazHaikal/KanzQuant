@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Appearance } from "./appearance";
 import { ResearchPath,ResearchHelp } from "./research-journey";
 import { ResearchNavigation } from "./research-navigation";
@@ -14,19 +15,20 @@ export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCo
   ticker: ShellTicker[]; seriesCount: number;
   searchItems: SearchItem[];
 }) {
-  return <div className="shell">
+  const path=usePathname(),composition=path==="/"||path==="/chart";
+  return <div className={`shell ${composition?"composition-shell":""}`}>
     <header className="topbar">
-      <Link className="brand" href="/">KANZQUANT</Link>
+      <Link className="brand" href="/">KanzQuant</Link>
       <div className="top-context"><span><strong>US Macro</strong></span><span>As of <strong>{asOf}</strong></span></div>
       <GlobalSearch items={searchItems}/>
       <div className="system-status mono"><span className="status-dot"/>{dataMode === "database" ? <><Link href="/data">Data details</Link>&nbsp; <span className="updated">Updated {updatedAt}</span></> : "DEMO FEED · EXPLICIT MODE"}</div>
       <ResearchHelp/>
       <Appearance/>
     </header>
-    <div className="ticker" aria-label="Current market metrics">
+    <div className="ticker" aria-label="Current market metrics" hidden={composition}>
       {ticker.map(([label,value,delta,tone]) => <div className="ticker-item" key={label}><span className="ticker-label">{label==="REGIME"?"Market state":humanName(label)}</span><span className="ticker-value">{value} <small className={`delta-${tone}`}>{delta}</small></span></div>)}
     </div>
     <ResearchNavigation count={seriesCount}/>
-    <main className="main"><ResearchPath/>{children}</main>
+    <main className="main">{!composition&&<ResearchPath/>}{children}</main>
   </div>;
 }

@@ -58,7 +58,7 @@ export default async function DataPage({
             <tbody>
               {filtered.map((item) => (
                 <tr key={item.id}>
-                  <td><span className="score">{item.externalId}</span> &nbsp; {item.name}</td>
+                  <td>{item.name}<small>{item.externalId}</small></td>
                   <td>{item.provider}</td><td>{item.category}</td><td>{item.frequency}</td>
                   <td>{item.start}</td><td>{item.end}</td>
                   <td>{item.observations.toLocaleString()}</td><td>{item.updated}</td>
