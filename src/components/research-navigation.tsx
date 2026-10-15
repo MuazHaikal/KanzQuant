@@ -5,6 +5,7 @@ import { useEffect,useState } from "react";
 import { NavigationIcon } from "./navigation-icon";
 const sections=[
  {icon:"◉",name:"Overview",href:"/",links:[]},
+ {icon:"",name:"Equities",href:"/equities",links:[["Discover","/equities"],["Screener","/equities/screener"]]},
  {icon:"◇",name:"Explore",href:"/similarity",links:[["Market environment","/regimes"],["Similar periods","/similarity"]]},
  {icon:"⌁",name:"Charts",href:"/chart",links:[]},
  {icon:"⬡",name:"Research",href:"/research/forecast",links:[["Test an Idea","/hypothesis"],["Model a Series","/research/forecast"],["Research records","/experiments"]]},

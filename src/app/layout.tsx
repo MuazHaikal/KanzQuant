@@ -5,10 +5,14 @@ import type { ShellTicker } from "@/components/app-shell";
 import { getResearchSnapshot } from "@/lib/research-data";
 import { getSeriesCatalogue } from "@/lib/database";
 import { factors } from "@/lib/focus-math";
+import equityUniverse from "../../data/equity_universe.json";
 import "./globals.css";
 import "./forecast.css";
 import "./workstation.css";
 import "./composition.css";
+import "./canonical.css";
+import "./visual-polish.css";
+import "./equities.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,8 +49,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>{/* Synchronous first-paint appearance; no third-party script or credentials. */}<script id="kanzquant-appearance" dangerouslySetInnerHTML={{__html:`try{var t=localStorage.getItem('kanzquant.theme.v1');document.documentElement.dataset.theme=t==='light'||t==='dark'?t:matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}catch{document.documentElement.dataset.theme='dark'}`}}/></head>
       <body className="min-h-full"><AppShell dataMode={dataMode} asOf={snapshot.as_of} updatedAt={snapshot.updated_at.slice(0, 16).replace("T", " ") + "Z"} ticker={ticker} seriesCount={catalogue.length} searchItems={[
+        ...equityUniverse.instruments.map(s=>({label:s.symbol+" · "+s.name,href:"/equities/"+s.symbol,kind:"Equity",keywords:s.symbol+" "+s.name})),
+        ...[["SPX","S&P 500","Index"],["GLD","Gold","ETF"],["IEF","U.S. Treasuries","ETF"]].map(([id,name,kind])=>({label:id+" · "+name,href:"/chart?series="+id,kind})),
         ...factors.map(f=>({label:f[0].toUpperCase()+f.slice(1),href:"/focus/factor/"+f,kind:"Factor"})),
-        ...catalogue.map(s=>({label:s.name+" · "+s.externalId,href:"/chart?series="+encodeURIComponent(s.externalId),kind:"Series",keywords:s.category+" "+snapshot.features.filter(f=>f.source===s.externalId).map(f=>f.group+" "+f.description).join(" ")})),
+        ...catalogue.map(s=>({label:s.name+" · "+s.externalId,href:"/chart?series="+encodeURIComponent(s.externalId),kind:"Macro",keywords:s.category+" "+snapshot.features.filter(f=>f.source===s.externalId).map(f=>f.group+" "+f.description).join(" ")})),
         ...(snapshot.state_vectors??[]).filter(v=>v.date<snapshot.as_of).map(v=>({label:v.date,href:"/focus/analogue/"+v.date,kind:"Historical date"})),
         ...[["Overview","/"],["Indicators","/macro"],["Similar Periods","/similarity"],["Market Environment","/regimes"],["Test an Idea","/hypothesis"],["Model a Series","/research/forecast"],["Data Catalogue","/data"],["Market History","/focus/market"],["Experiments","/experiments"]].map(([label,href])=>({label,href,kind:"Module"}))
       ]}>{children}</AppShell></body>

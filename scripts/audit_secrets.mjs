@@ -6,7 +6,14 @@ const keys=["DATABASE_URL","FRED_API_KEY","HYPOTHESIS_RUN_SECRET","RENDER_API_KE
 const values=keys.map(k=>process.env[k]).filter(v=>v&&v.length>=12);
 try{const password=decodeURIComponent(new URL(process.env.DATABASE_URL).password);if(password.length>=8)values.push(password);}catch{}
 const issues=new Set();
-function inspect(content,path){if(values.some(v=>content.includes(v))||/postgres(?:ql)?:\/\/[^\s"']+:[^\s"']+@/i.test(content)||/(?:gh[pousr]_[A-Za-z0-9]{30,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)/.test(content))issues.add(path);}
+function credentialUrl(content){
+  // Minified libraries contain URL-parser fragments, not necessarily URLs.
+  for(const match of content.matchAll(/postgres(?:ql)?:\/\/[^\s"'`<>{}();]+/gi)){
+    try{const url=new URL(match[0]);if(url.username&&url.password&&url.hostname)return true;}catch{}
+  }
+  return false;
+}
+function inspect(content,path){if(values.some(v=>content.includes(v))||credentialUrl(content)||/(?:gh[pousr]_[A-Za-z0-9]{30,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)/.test(content))issues.add(path);}
 const working=git("ls-files","--cached","--others","--exclude-standard").trim().split(/\r?\n/).filter(Boolean);
 for(const path of working){if(existsSync(path))inspect(readFileSync(path,"utf8"),path);if(/^\.env(?:\.|$)/.test(path)&&path!==".env.example")issues.add(path);}
 const history=git("rev-list","--objects","--all").trim().split(/\r?\n/).filter(Boolean);

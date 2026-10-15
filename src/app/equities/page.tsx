@@ -1,0 +1,10 @@
+import Link from "next/link";
+import {equityList} from "@/lib/equities";
+import {numeric,presetMatches} from "@/lib/equity-screen";
+import {Panel} from "@/components/ui";
+import {GlobalSearch} from "@/components/global-search";
+export default async function Equities(){
+ const rows=await equityList(),ready=rows.filter(r=>r.features),latest=ready.map(r=>r.priceDate!).sort().at(-1),ranking=ready.filter(r=>r.priceDate===latest);
+ const views=[["Momentum Leaders","momentum_12_1"],["Short-Term Reversals","z20"],["Near 52W High","high52_proximity"],["High Volatility","vol20"],["Deep Drawdowns","drawdown"],["Strong Revenue Growth","revenue_ttm_growth"]];
+ return <div className="equity-workspace"><Panel title="Equities" meta={`${ready.length}/${rows.length} cached · price data through ${latest??"unavailable"}`}><div className="equity-discovery-head"><span>Systematic stock discovery and research</span><GlobalSearch items={rows.map(r=>({label:r.symbol+" · "+r.name,href:"/equities/"+r.symbol,kind:"Equity"}))}/><Link href="/equities/screener">Open Screener ↗</Link></div></Panel><div className="equity-discover-grid">{views.map(([name,key])=>{const list=ranking.filter(r=>presetMatches(r,name)).sort((a,b)=>((numeric(a,key)??0)-(numeric(b,key)??0))*(name==="Deep Drawdowns"||name==="Short-Term Reversals"?1:-1)).slice(0,8);return <Panel key={name} title={name} meta={latest??"Unavailable"} noPad>{list.length?list.map((r,i)=><Link className="equity-discover-row" key={r.symbol} href={"/equities/"+r.symbol}><span>{String(i+1).padStart(2,"0")}</span><strong>{r.symbol}</strong><span>{r.name}</span><b>{numeric(r,key)?.toFixed(2)}{key==="z20"?" z":"%"}</b></Link>):<div className="panel-body">No cached equities meet this definition.</div>}</Panel>;})}</div><Panel title="Research coverage" meta="Current membership universe"><p>{rows.length} instruments · {ranking.length} snapshots share the latest price date. Rankings use that date only.</p><small>Current membership creates survivorship bias. Historical setups are descriptive, use price features only, and are not forecasts.</small></Panel></div>;
+}

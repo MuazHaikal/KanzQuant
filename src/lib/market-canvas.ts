@@ -1,7 +1,7 @@
 import { clampMarketDomain, findBar, rangeMonths, monthsBack, zoomMarketDomain, type Candle, type ComparePoint, type Interval, type MarketDomain, type MarketRange } from "./market-math";
 import { wheelIntent } from "./chart-domain";
 export type RegimeBand = { date: string; label: string; color: string };
-export type CanvasModel = { candles: Candle[]; interval: Interval; range: MarketRange; anchor?: string; latest?: number; volume: boolean; volumeMeaningful?: boolean; regimes: RegimeBand[]; paths?: { name: string; points: ComparePoint[] }[] };
+export type CanvasModel = { candles: Candle[]; interval: Interval; range: MarketRange; anchor?: string; latest?: number; volume: boolean; volumeMeaningful?: boolean; volumeFraction?: number; regimes: RegimeBand[]; paths?: { name: string; points: ComparePoint[] }[]; overlays?: {name:string;color:string;points:{date:string;value:number}[]}[]; bands?: {name:string;color:string;fill:string;middle:boolean;points:{date:string;upper:number;lower:number;middle:number}[]}[] };
 const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 const signed = (n: number) => (n > 0 ? "+" : "") + fmt(n);
 /** Imperative canvas controller: pointer frames never update React state or query a server. */
@@ -103,7 +103,8 @@ export class MarketCanvas {
     const css = getComputedStyle(this.canvas), color = (name: string) => css.getPropertyValue(name).trim();
     const bg = color("--panel"), grid = color("--line"), text = color("--muted"), up = color("--positive"), down = color("--negative"), accent = color("--teal"), blue = color("--cyan"), neutral = color("--dim");
     ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h); ctx.font = "11px " + css.fontFamily; ctx.lineWidth = 1;
-    const left = 12, right = w - 77, top = 18, bottom = h - (this.model.volume && !this.model.paths ? 78 : 29), plotWidth = right - left;
+    const volumeHeight = this.model.volumeFraction === undefined ? 36 : Math.max(0, Math.min(.18, this.model.volumeFraction)) * (h - 47);
+    const left = 12, right = w - 77, top = 18, bottom = h - (this.model.volume && !this.model.paths ? this.model.volumeFraction === undefined ? 78 : 41 + volumeHeight : 29), plotWidth = right - left;
     const [lo, hi] = this.domain, span = Math.max(.8, hi - lo), x = (i: number) => left + (i - lo) / span * plotWidth;
     const pathSlices = this.model.paths?.map(path => {
       const bound = (value: number) => { let l = 0, r = path.points.length; while (l < r) { const m = (l + r) >>> 1; if (path.points[m].x < value) l = m + 1; else r = m; } return l; };
@@ -113,6 +114,8 @@ export class MarketCanvas {
     let low = Infinity, high = -Infinity;
     if (pathSlices) { for (const p of pathSlices) for (const point of p.points) { low = Math.min(low, point.value); high = Math.max(high, point.value); } }
     else for (let i = start; i <= end; i++) { low = Math.min(low, bars[i].low); high = Math.max(high, bars[i].high); }
+    const visibleBands = (this.model.bands ?? []).map(band => ({...band, points: band.points.map(p => ({...p, index: findBar(bars, p.date)})).filter(p => p.index >= start && p.index <= end)}));
+    for (const band of visibleBands) for (const p of band.points) { low = Math.min(low, p.lower); high = Math.max(high, p.upper); }
     if (!Number.isFinite(low)) { ctx.fillStyle = text; ctx.fillText("No real observations in this window", left + 12, top + 22); this.readout.textContent = "No OHLC available"; return; }
     const padding = Math.max((high - low) * .08, high * .002); low = Math.max(0, low - padding); high += padding;
     const y = (price: number) => top + (high - price) / (high - low) * (bottom - top);
@@ -130,7 +133,22 @@ export class MarketCanvas {
       else { const b = bars[Math.max(0, Math.min(bars.length - 1, Math.round(logical)))]; label = this.model.interval === "1D" || this.model.interval === "1W" ? b?.date ?? "" : b?.label ?? ""; }
       ctx.fillStyle = text; ctx.textAlign = i === 0 ? "left" : i === 4 ? "right" : "center"; ctx.fillText(label, px, h - 8); ctx.textAlign = "left";
     }
+    let volumeMax = 0;
     ctx.save(); ctx.beginPath(); ctx.rect(left, top, plotWidth, h - top - 29); ctx.clip();
+    ctx.save(); ctx.beginPath(); ctx.rect(left, top, plotWidth, bottom - top); ctx.clip();
+    for (const band of visibleBands) {
+      if (!band.points.length) continue;
+      ctx.beginPath();
+      band.points.forEach((p, i) => { if (i === 0) ctx.moveTo(x(p.index), y(p.upper)); else ctx.lineTo(x(p.index), y(p.upper)); });
+      for (let i = band.points.length - 1; i >= 0; i--) { const p = band.points[i]; ctx.lineTo(x(p.index), y(p.lower)); }
+      ctx.closePath(); ctx.fillStyle = band.fill; ctx.fill();
+      ctx.strokeStyle = band.color; ctx.lineWidth = .8;
+      for (const edge of (band.middle ? ["upper", "lower", "middle"] : ["upper", "lower"]) as ("upper" | "lower" | "middle")[]) {
+        ctx.beginPath(); band.points.forEach((p, i) => { if (i === 0) ctx.moveTo(x(p.index), y(p[edge])); else ctx.lineTo(x(p.index), y(p[edge])); }); ctx.stroke();
+      }
+      ctx.lineWidth = 1;
+    }
+    ctx.restore();
     if (!this.model.paths && this.model.regimes.length) {
       // A slim strip, not a candle-obscuring backdrop; map monthly descriptive labels to their own month.
       for (let i = start; i <= end; i++) { const regime = this.regimeMap.get(bars[i].end.slice(0, 7)); if (regime) { ctx.fillStyle = regime.color; ctx.globalAlpha = .55; ctx.fillRect(x(i) - plotWidth / span / 2, bottom - 4, Math.max(1, plotWidth / span), 4); } }
@@ -158,7 +176,8 @@ export class MarketCanvas {
       } if (spacing < 1.2) flush();
       if (this.model.volume) {
         let maxVolume = 0; for (let i = start; i <= end; i++) maxVolume = Math.max(maxVolume, bars[i].volume ?? 0);
-        if (maxVolume) for (let i = start; i <= end; i++) { const b = bars[i], size = (b.volume ?? 0) / maxVolume * 36; ctx.fillStyle = b.close >= b.open ? up : down; ctx.globalAlpha = .5; ctx.fillRect(x(i) - Math.max(1, spacing * .66) / 2, h - 31 - size, Math.max(1, spacing * .66), size); }
+        volumeMax = maxVolume;
+        if (maxVolume) for (let i = start; i <= end; i++) { const b = bars[i], size = (b.volume ?? 0) / maxVolume * volumeHeight; ctx.fillStyle = b.close >= b.open ? up : down; ctx.globalAlpha = .5; ctx.fillRect(x(i) - Math.max(1, spacing * .66) / 2, h - 31 - size, Math.max(1, spacing * .66), size); }
         ctx.globalAlpha = 1;
       }
       const latest = this.model.latest;
@@ -168,7 +187,13 @@ export class MarketCanvas {
     }
     const anchorIndex = this.model.paths ? 0 : this.model.anchor ? findBar(bars, this.model.anchor) : -1;
     if ((this.model.paths || this.model.anchor) && anchorIndex >= lo && anchorIndex <= hi) { ctx.strokeStyle = blue; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(x(anchorIndex), top); ctx.lineTo(x(anchorIndex), bottom); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = blue; ctx.fillText(this.model.paths ? "ANCHOR 100" : "ANALOGUE " + this.model.anchor, Math.min(right - 147, Math.max(left + 4, x(anchorIndex) + 5)), top + 12); }
+    for(const overlay of this.model.overlays??[]){
+      ctx.strokeStyle=overlay.color;ctx.lineWidth=1.3;ctx.beginPath();let begun=false;
+      for(const p of overlay.points){const index=findBar(bars,p.date);if(index<start||index>end)continue;if(!begun){ctx.moveTo(x(index),y(p.value));begun=true;}else ctx.lineTo(x(index),y(p.value));}
+      ctx.stroke();
+    }
     ctx.restore();
+    if (volumeMax && this.model.volumeFraction !== undefined) { ctx.fillStyle = text; ctx.fillText(new Intl.NumberFormat("en", {notation: "compact"}).format(volumeMax), right + 9, h - 31 - volumeHeight + 4); }
     if (!this.model.paths && this.model.latest !== undefined && this.model.latest >= low && this.model.latest <= high) { ctx.fillStyle = accent; ctx.fillRect(right + 3, y(this.model.latest) - 9, 72, 18); ctx.fillStyle = bg; ctx.fillText(fmt(this.model.latest), right + 7, y(this.model.latest) + 4); }
     const hover = this.hover;
     let description = "";
@@ -191,6 +216,10 @@ export class MarketCanvas {
     this.readout.textContent = description;
     this.canvas.dataset.domain = `${lo.toFixed(3)},${hi.toFixed(3)}`;
     this.canvas.dataset.renderedCandles = String(Math.max(0, end - start + 1));
+    this.canvas.dataset.overlays = (this.model.overlays ?? []).map(p => p.name).join("|");
+    this.canvas.dataset.bands = visibleBands.filter(b => b.points.length).map(b => b.name).join("|");
+    this.canvas.dataset.volumeBars = String(this.model.volume && !this.model.paths ? bars.slice(start, end + 1).filter(b => b.volume !== null && b.volume > 0).length : 0);
+    this.canvas.dataset.volumeFraction = String(this.model.volumeFraction ?? "legacy");
     this.windowLabel.textContent = this.model.paths ? "Relative to each anchor · no current future path fabricated" : `${bars[start]?.date ?? ""} — ${bars[end]?.end ?? ""}`;
   }
   destroy() { cancelAnimationFrame(this.frame); clearTimeout(this.boundaryTimer); this.observer.disconnect(); this.themeObserver.disconnect(); this.cleanup.forEach(fn => fn()); }

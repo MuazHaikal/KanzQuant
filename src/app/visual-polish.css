@@ -1,0 +1,48 @@
+/* Refinements within the approved canonical composition. */
+.composition-explorer .instrument-header{min-height:60px;padding-bottom:8px}
+.composition-explorer .instrument-identity button{border:0;background:transparent}
+.composition-explorer .chart-command-bar{padding-bottom:8px;min-height:38px}
+.composition-explorer .chart-command-bar button,.composition-explorer .chart-command-bar select{min-height:30px}
+.composition-rail .panel-head{padding:10px 12px!important}
+.composition-rail .state-identity{border:0;background:none;margin:0;padding:4px 12px 10px!important}
+.composition-rail .compact-factors>a{border:0;background:none;border-radius:0;margin:0 12px;padding:8px 0!important}
+.composition-rail .compact-periods>a{border:0;border-top:1px solid var(--line);border-radius:0;background:none;margin:0 12px;padding:9px 0!important}
+.composition-rail .investigate-action{padding:10px 12px!important}
+.composition-rail .investigate-action small{display:none}
+.composition-rail .investigate-action{font-size:12px}
+.composition-analytics>.panel{height:180px}
+.composition-analytics .panel-head{padding:10px 12px}
+.composition-analytics .panel-body{padding:6px 12px 10px}
+.composition-analytics .analytic-median{gap:8px}
+.composition-analytics .empirical-strip.compact svg{height:70px}
+.overview-research .compact-factors{gap:6px;padding:0 12px 10px}
+.overview-research .compact-factors>a{border:0;min-height:66px;padding:10px;gap:9px}
+.overview-research .compact-periods>a{padding:10px 14px}
+.overview-market .market-canvas{height:clamp(390px,calc(100vh - 420px),580px)!important}
+.canonical-validation{gap:10px}
+.forecast-research-rail{gap:8px}
+.forecast-research-rail .forecast-verdict{padding:10px 12px;gap:6px}
+.forecast-research-rail .forecast-verdict>div:first-child{padding:0;border:0;background:none}
+.forecast-research-rail .forecast-verdict>div:first-child strong{font-size:18px;line-height:1.3}
+.forecast-research-rail .panel-head{min-height:34px;padding:8px 12px}
+.forecast-research-rail .forecast-model-table td,.forecast-research-rail .forecast-model-table th{height:29px;padding:6px 10px;font-size:12px}
+.forecast-research-rail .forecast-model-table th{font-size:11px}
+.forecast-research-rail .panel-body{padding:7px 12px 10px}
+.forecast-research-rail .model-settings{font-size:12px;line-height:1.3;gap:4px}
+.contained-settings{margin-top:7px}
+.canonical-validation>div>.panel .forecast-plot svg{height:285px!important}
+.forecast-workspace .forecast-plot{padding:6px 10px}
+.forecast-workspace .forecast-readout{min-height:26px;padding:4px 2px;font-size:11px}
+.canonical-fan{margin-top:10px}
+.canonical-fan .panel-head{min-height:36px;padding:8px 12px}
+.canonical-fan .forecast-plot svg{height:185px!important}
+.canonical-fan .footer-note{padding:4px 12px;font-size:11px}
+.canonical-diagnostics{margin-top:10px;gap:10px}
+.canonical-diagnostics .panel-head{min-height:36px;padding:8px 12px}
+.canonical-diagnostics .forecast-plot svg{height:145px}
+.canonical-diagnostics .stationarity-tests>div{background:none;padding:5px}
+.canonical-diagnostics .stationarity-tests strong{font-size:12px;line-height:1.4}
+.canonical-diagnostics .coverage-bars>div{margin:11px 0}
+.canonical-shell .nav-link.active{border-color:transparent!important}
+@media(max-width:1050px){.canonical-validation>div>.panel .forecast-plot svg{height:260px!important}}
+@media(max-width:700px){.composition-analytics>.panel{height:auto;min-height:180px}.overview-market .market-canvas{height:320px!important}}

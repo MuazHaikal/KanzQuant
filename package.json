@@ -15,6 +15,11 @@
     "test:forecast-ui": "node scripts/test_forecast_ui.mjs",
     "test:visual": "node scripts/test_visual.mjs",
     "test:market": "node --env-file=.env.local scripts/test_market.mjs",
+    "test:equities": "node --env-file=.env.local scripts/test_equities.mjs",
+    "test:equity-indicators": "node --test scripts/test_equity_indicators.mjs",
+    "equities:universe": "node scripts/run_python.mjs scripts/sync_equity_universe.py",
+    "ingest:equities": "node scripts/run_python.mjs scripts/ingest_equities.py",
+    "ingest:equity-universe": "node scripts/run_python.mjs scripts/ingest_equity_universe.py",
     "test:hypothesis": "node --env-file=.env.local scripts/test_hypothesis.mjs",
     "test:hypothesis-service": "node --env-file=.env.local scripts/test_hypothesis_service.mjs",
     "test:hypothesis-client": "node scripts/test_hypothesis_client.mjs",
@@ -31,6 +36,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
+    "lucide-react": "^1.57.0",
     "next": "16.3.8",
     "react": "19.2.8",
     "react-dom": "19.2.8"

@@ -45,6 +45,7 @@ yarn-error.log*
 .venv/
 __pycache__/
 .pytest_cache/
+.cache/
 *.py[cod]
 
 # vercel
