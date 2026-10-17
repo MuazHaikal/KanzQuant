@@ -16,12 +16,12 @@ export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCo
   searchItems: SearchItem[];
 }) {
   const path=usePathname(),composition=path==="/"||path==="/chart"||path.startsWith("/research/forecast");
-  return <div className={`shell canonical-shell ${composition?"composition-shell":""}`}>
-    <header className="topbar">
+  return <div className={`shell canonical-shell canonical-migration-shell ${composition?"composition-shell":""}`}>
+    <a className="workspace-skip-link" href="#workspace-main">Skip to research</a><header className="topbar" id="workspace-top">
       <Link className="brand" href="/">KanzQuant</Link>
       <div className="top-context"><span><strong>US Macro</strong></span><span>As of <strong>{asOf}</strong></span></div>
       <GlobalSearch items={searchItems}/>
-      <div className="system-status mono"><span className="status-dot"/>{dataMode === "database" ? <><Link href="/data">Data details</Link>&nbsp; <span className="updated">{path.startsWith("/equities")?"Macro updated":"Updated"} {updatedAt}</span></> : "DEMO FEED · EXPLICIT MODE"}</div>
+      <div className="system-status mono"><span className="status-dot"/>{dataMode === "database" ? <><Link href="/data">Data details</Link>&nbsp; <span className="updated">Macro research built {updatedAt}</span></> : "DEMO FEED · EXPLICIT MODE"}</div>
       <ResearchHelp/>
       <Appearance/>
     </header>
@@ -29,6 +29,6 @@ export function AppShell({ children, dataMode, asOf, updatedAt, ticker, seriesCo
       {ticker.map(([label,value,delta,tone]) => <div className="ticker-item" key={label}><span className="ticker-label">{label==="REGIME"?"Market state":humanName(label)}</span><span className="ticker-value">{value} <small className={`delta-${tone}`}>{delta}</small></span></div>)}
     </div>
     <ResearchNavigation count={seriesCount}/>
-    <main className="main">{children}</main>
+    <main className="main" id="workspace-main">{children}</main>
   </div>;
 }

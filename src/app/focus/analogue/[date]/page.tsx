@@ -1,34 +1,32 @@
-import { notFound } from "next/navigation";
+import {notFound} from "next/navigation";
 import Link from "next/link";
-import { humanName } from "@/lib/guided-research";
-import { FocusShell } from "@/components/focus-shell";
-import { MarketChart } from "@/components/market-chart";
-import { getMarketWindow } from "@/lib/market-data";
-import { assets, monthsBack, type Asset } from "@/lib/market-math";
-import { Metrics,Heat,number } from "@/components/focus-panels";
-import { Panel,MethodologyDisclosure } from "@/components/ui";
-import { getFocusData } from "@/lib/focus-data";
-import { axis,cosine,factors,returnAt,validDate } from "@/lib/focus-math";
-import { regimeColor } from "@/lib/research-data";
-import { featureNames } from "@/lib/factor-context";
-import { Tip } from "@/components/context-labels";
+import {humanName} from "@/lib/guided-research";
+import {FocusShell} from "@/components/focus-shell";
+import {MarketChart} from "@/components/market-chart";
+import {getMarketWindow} from "@/lib/market-data";
+import {assets,monthsBack,type Asset} from "@/lib/market-math";
+import {Heat,number} from "@/components/focus-panels";
+import {Panel,MethodologyDisclosure} from "@/components/ui";
+import {DistributionStrip} from "@/components/visual-research";
+import {getFocusData} from "@/lib/focus-data";
+import {axis,cosine,factors,returnAt,validDate} from "@/lib/focus-math";
+import {regimeColor} from "@/lib/research-data";
+import {featureNames} from "@/lib/factor-context";
+import {Tip} from "@/components/context-labels";
 export default async function AnaloguePage({params,searchParams}:{params:Promise<{date:string}>;searchParams:Promise<{asset?:string;view?:string}>}){
  const {date}=await params;if(!validDate(date))notFound();
  const {snapshot:data,prices}=await getFocusData(),historical=data.state_vectors?.find(p=>p.date===date);if(!historical||date>=data.as_of)notFound();
- const query=await searchParams,asset=assets.includes(query.asset as Asset)?query.asset as Asset:"SPX",view=query.view==="compare"?"COMPARE":"CANDLES";
+ const query=await searchParams,asset=assets.includes(query.asset as Asset)?query.asset as Asset:"SPX",view=query.view==="candles"?"CANDLES":"COMPARE";
  const market=await getMarketWindow(asset,monthsBack(date,36),monthsBack(date,-36));
- const latest=data.state_vectors!.at(-1)!.values,keys=data.features.map(f=>f.key),score=cosine(latest,historical.values,keys);
- const regime=data.regime_history.find(r=>r.date===date)?.label??"N/A";
+ const latest=data.state_vectors!.at(-1)!.values,keys=data.features.map(f=>f.key),score=cosine(latest,historical.values,keys),regime=data.regime_history.find(r=>r.date===date)?.label??"Unavailable";
  const norm=Math.sqrt(keys.reduce((s,k)=>s+latest[k]**2,0)*keys.reduce((s,k)=>s+historical.values[k]**2,0));
  const differences=data.features.map(f=>({...f,now:latest[f.key],then:historical.values[f.key],difference:Math.abs(latest[f.key]-historical.values[f.key]),contribution:norm?latest[f.key]*historical.values[f.key]/norm*100:null})).filter(f=>Number.isFinite(f.difference)).sort((a,b)=>b.difference-a.difference);
- return <FocusShell title={"Historical analogue / "+date} asOf={data.as_of} status={[regime,"Similarity "+number(score===null?null:score*100),"Today: "+data.current_regime]}>
- <div className="hyp-context-action"><Link href={`/hypothesis?source=credit&metric=level&op=${axis(historical.values,"credit")!<0?"lt":"gt"}&threshold=${(axis(historical.values,"credit")??0).toFixed(2)}`}>TEST SIMILAR CONDITION ↗</Link><span>Credit level at this date · editable, not full-state similarity.</span></div>
- <Panel title="Analogue market inspection" meta={`Analogue ${date} · current anchor ${data.as_of}`} noPad><MarketChart initial={market} initialAsset={asset} initialView={view} anchor={date} currentAnchor={data.as_of} height={340} regimes={data.regime_history.map(r=>({date:r.date,label:r.label,color:regimeColor(r.label)}))}/></Panel>
- <div className="focus-columns"><div className="focus-stack">
- <Panel title="Current vs historical state" meta="STANDARDIZED FACTOR VALUES" noPad><table className="data-table"><thead><tr><th>Factor</th><th>Current σ</th><th>{date} σ</th><th>Δ σ</th></tr></thead><tbody>{factors.map(f=>{const now=axis(latest,f),then=axis(historical.values,f);return <tr key={f}><td>{humanName(f)}</td><td>{number(now)}</td><td>{number(then)}</td><td>{number(now===null||then===null?null:now-then)}</td></tr>;})}</tbody></table></Panel>
- <Panel title="Observed forward returns" meta="Unchanged monthly adjusted-price methodology" noPad><table className="data-table"><thead><tr><th>Asset</th>{["1M","3M","6M","12M"].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>{["SPX","GLD","IEF"].map(a=><tr key={a}><td>{humanName(a)}</td>{[1,3,6,12].map(m=><td key={m}><Heat value={returnAt(prices[a]??[],date,m,data.as_of)}/></td>)}</tr>)}</tbody></table></Panel>
- </div><div className="focus-stack">
- <Panel title="Regime context" noPad><Metrics items={[["Historical",regime],["Current",data.current_regime],["Cosine",number(score===null?null:score*100)],["Features",String(keys.length)]]}/></Panel>
- <Panel title="Important differences / similarity inputs" meta="Largest level differences first" noPad><table className="data-table difference-table"><thead><tr><th>Feature</th><th>Today</th><th>Then</th><th>|Δ z|</th><th><Tip text="Signed per-feature dot product divided by both vector norms × 100. These additive terms sum to the displayed cosine similarity. Not causal contributions or probabilities.">Similarity term ⓘ</Tip></th></tr></thead><tbody>{differences.map(f=><tr key={f.key}><td><Tip text={f.description+" · "+f.source}>{featureNames[f.key]??f.source}</Tip></td><td>{number(f.now)}</td><td>{number(f.then)}</td><td>{f.difference.toFixed(2)}</td><td className="score">{number(f.contribution)}</td></tr>)}</tbody></table><div className="footer-note">Signed terms sum to {number(score===null?null:score*100)} · cosine alignment, not probability</div></Panel>
- </div></div><MethodologyDisclosure/></FocusShell>;
+ const values=data.neighbours.flatMap(r=>r.returns[asset]?.["6m"]==null?[]:[r.returns[asset]["6m"]!]),selectedReturn=returnAt(prices[asset]??[],date,6,data.as_of);
+ return <FocusShell title={"Historical Analogue / "+date} asOf={data.as_of} status={[]}><div className="canonical-analogue phase-four-analogue"><nav className="analogue-episode-nav" aria-label="Choose historical analogue">{data.neighbours.slice(0,8).map(n=><Link key={n.date} href={`/focus/analogue/${n.date}?asset=${asset}&view=${view.toLowerCase()}`} aria-current={n.date===date?"page":undefined}>{n.date}</Link>)}<Link href="/similarity">All analogues ↗</Link></nav><div className="analogue-primary-grid"><div className="analogue-main"><Panel title="Episode Comparison" meta={`Analogue ${date} · current anchor ${data.as_of}`} noPad><MarketChart initial={market} initialAsset={asset} initialView={view} anchor={date} currentAnchor={data.as_of} height={380} regimes={data.regime_history.map(r=>({date:r.date,label:r.label,color:regimeColor(r.label)}))}/></Panel>
+ <div className="analogue-lower-grid"><Panel title="Similarity inputs / differences" meta={`${keys.length} model features · largest |Δ z| first`} noPad><div className="workstation-table-scroll analogue-input-scroll" tabIndex={0} aria-label="Analogue similarity inputs"><table className="data-table"><thead><tr><th>Feature</th><th>Today</th><th>Then</th><th>|Δ z|</th><th>Term</th></tr></thead><tbody>{differences.map(f=><tr key={f.key}><td><Tip text={f.description+" · "+f.source}>{featureNames[f.key]??f.source}</Tip></td><td>{number(f.now)}</td><td>{number(f.then)}</td><td>{f.difference.toFixed(2)}</td><td title="Signed dot product divided by both vector norms × 100; not a probability.">{number(f.contribution)}</td></tr>)}</tbody></table></div><p className="contained-note">Signed terms sum to {number(score===null?null:score*100)}. Not causal attribution.</p></Panel>
+ <Panel title="Historical Outcome Distribution" meta={`${asset} · 6M · nearest episodes · n=${values.length}`}><DistributionStrip values={values} current={selectedReturn} label="Selected analogue"/><p className="contained-note">n={values.length} · {values.length<30?"Small descriptive sample. ":""}No confidence interval or significance test is calculated.</p></Panel>
+ <Panel title="Observed State Timeline" meta="Persisted monthly states · not news events" noPad><div className="analogue-timeline">{[0,1,3,6,12].map(month=>{const anchor=new Date(date+"T00:00:00Z"),at=new Date(Date.UTC(anchor.getUTCFullYear(),anchor.getUTCMonth()+month+1,0)).toISOString().slice(0,10),state=data.regime_history.findLast(r=>r.date<=at&&r.date<=data.as_of);return <div key={month}><span>{month?"+"+month+"M":"Anchor"}</span><strong>{at}</strong><small>{at>data.as_of?"Not yet observed":state?.label??"Unavailable"}</small></div>;})}</div><p className="contained-note">Full-history descriptive states. No news or causal event labels are inferred.</p></Panel></div></div>
+ <aside className="analogue-summary"><Panel title="Analogue Summary" meta={`${date} · ${keys.length} features`}><div className="analogue-score"><strong>{score===null?"—":(score*100).toFixed(1)+"%"}</strong><span>Cosine alignment<br/>Not a probability or forecast</span></div><dl className="analogue-regimes"><div><dt>Historical state</dt><dd>{regime}</dd></div><div><dt>Current state</dt><dd>{data.current_regime}</dd></div></dl><div className="similarity-term-list"><h3>Largest similarity terms</h3>{differences.toSorted((a,b)=>Math.abs(b.contribution??0)-Math.abs(a.contribution??0)).slice(0,4).map(f=><div key={f.key}><span>{featureNames[f.key]??f.source}</span><b>{number(f.contribution)} pp</b></div>)}<small>Signed cosine terms · not causal attribution</small></div></Panel>
+ <Panel title="Macro State Alignment" meta="Composite levels · axis units" noPad><div className="workstation-table-scroll" tabIndex={0} aria-label="Current versus historical macro states"><table className="data-table"><thead><tr><th>Factor</th><th>Current</th><th>Analogue</th><th>Δ</th></tr></thead><tbody>{factors.map(f=>{const now=axis(latest,f),then=axis(historical.values,f);return <tr key={f}><td>{humanName(f)}</td><td>{number(now)}</td><td>{number(then)}</td><td>{number(now===null||then===null?null:now-then)}</td></tr>;})}</tbody></table></div></Panel>
+ <Panel title="Observed Forward Outcomes" meta="From analogue start · not expected returns" noPad><div className="workstation-table-scroll" tabIndex={0} aria-label="Selected analogue forward outcomes"><table className="data-table"><thead><tr><th>Asset</th>{["1M","3M","6M","12M"].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>{assets.map(a=><tr key={a}><td>{a}</td>{[1,3,6,12].map(m=><td key={m}><Heat value={returnAt(prices[a]??[],date,m,data.as_of)}/></td>)}</tr>)}</tbody></table></div><p className="contained-note">One episode per cell · monthly price returns. No single-episode significance is claimed.</p></Panel><Panel title="Related Evidence"><Link className="study-open" href="/evidence?source=credit">Browse stored credit studies ↗</Link></Panel></aside></div><MethodologyDisclosure/></div></FocusShell>;
 }

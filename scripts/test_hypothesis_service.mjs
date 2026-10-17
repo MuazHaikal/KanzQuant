@@ -3,7 +3,8 @@ import {createHmac,randomUUID} from "node:crypto";
 import {neon} from "@neondatabase/serverless";
 const base=process.env.FOCUS_TEST_URL??"http://127.0.0.1:3001",sql=neon(process.env.DATABASE_URL);
 const parameters={mode:"conditional",conditions:[{source:"credit",metric:"3",op:"falling",threshold:0}],asset:"SPX",horizon:1,spacing:3,baseline:"others",method:"Automatic",alternative:"two-sided",label:"EXPLORATORY",family:"service-failure-verification-"+Date.now(),seed:42};
-const prep=await fetch(base+"/api/hypothesis/prepare",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(parameters)});assert.equal(prep.status,200);const capability=await prep.json();
+const internalHeaders={"Content-Type":"application/json",Authorization:`Bearer ${process.env.HYPOTHESIS_RUN_SECRET}`};
+const prep=await fetch(base+"/api/hypothesis/prepare",{method:"POST",headers:internalHeaders,body:JSON.stringify(parameters)});assert.equal(prep.status,200);const capability=await prep.json();
 const post=(body,origin)=>fetch(capability.execution_url,{method:"POST",headers:{"Content-Type":"application/json",...(origin?{Origin:origin}:{})},body:JSON.stringify(body),signal:AbortSignal.timeout(90000)});
 const tokenFor=(id,expires)=>`v1.${expires}.`+createHmac("sha256",process.env.HYPOTHESIS_RUN_SECRET).update(`kanzquant.hypothesis.v1\n${id}\n${expires}`).digest("base64url");
 const body={run_id:capability.run_id,token:capability.execution_token};
@@ -28,7 +29,7 @@ try{
 }finally{
  await sql`UPDATE research_runs SET metadata=jsonb_set(metadata,'{dataset_hash}',${JSON.stringify(before.metadata.dataset_hash)}::jsonb) WHERE id=${body.run_id}::uuid AND module='hypothesis.lab'`;
 }
-const renewed=await(await fetch(base+"/api/hypothesis/prepare",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({run_id:body.run_id})})).json();assert.equal(renewed.run_id,body.run_id);
+const renewed=await(await fetch(base+"/api/hypothesis/prepare",{method:"POST",headers:internalHeaders,body:JSON.stringify({run_id:body.run_id})})).json();assert.equal(renewed.run_id,body.run_id);
 const completed=await(await post({run_id:body.run_id,token:renewed.execution_token})).json();assert.equal(completed.status,"complete");
 const [after]=await sql`SELECT status,metadata->>'attempts' attempts,(SELECT count(*)::int FROM research_results WHERE run_id=${body.run_id}::uuid AND result_type='hypothesis') results FROM research_runs WHERE id=${body.run_id}::uuid`;
 assert.equal(after.status,"complete");assert.equal(after.attempts,"2");assert.equal(after.results,1);

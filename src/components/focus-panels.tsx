@@ -3,7 +3,7 @@ import { DrillRow } from "@/components/drill-row";
 import { Panel, ReturnHeat } from "./ui";
 import { quantile,stats,type Horizon,returnAt } from "@/lib/focus-math";
 import type { Point } from "@/lib/research-data";
-export const number=(value:number|null|undefined,suffix="")=>value==null||!Number.isFinite(value)?"N/A":(value>0?"+":"")+value.toFixed(2)+suffix;
+export const number=(value:number|null|undefined,suffix="")=>{if(value==null||!Number.isFinite(value))return "N/A";const rounded=Number(value.toFixed(2));return (rounded>0?"+":"")+(rounded===0?0:rounded).toFixed(2)+suffix;};
 export function Heat({value}:{value:number|null}){return value===null?<span className="rank">N/A</span>:<ReturnHeat value={value}/>;}
 export function Spark({points}:{points:Point[]}){
  if(points.length<2)return <span>N/A</span>;const values=points.map(p=>p.value),min=Math.min(...values),extent=Math.max(...values)-min||1;

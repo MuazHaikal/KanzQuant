@@ -13,6 +13,12 @@ import "./composition.css";
 import "./canonical.css";
 import "./visual-polish.css";
 import "./equities.css";
+import "./canonical-migration.css";
+import "./phase-one.css";
+import "./phase-two.css";
+import "./phase-three.css";
+import "./phase-four.css";
+import "./phase-five.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +32,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "KanzQuant — Quantitative Research Workstation",
-  description: "Institutional macro regime and historical similarity research.",
+  description: "Systematic equity and market research, statistical evidence and historical context.",
 };
 
 export const dynamic = "force-dynamic";
@@ -54,7 +60,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         ...factors.map(f=>({label:f[0].toUpperCase()+f.slice(1),href:"/focus/factor/"+f,kind:"Factor"})),
         ...catalogue.map(s=>({label:s.name+" · "+s.externalId,href:"/chart?series="+encodeURIComponent(s.externalId),kind:"Macro",keywords:s.category+" "+snapshot.features.filter(f=>f.source===s.externalId).map(f=>f.group+" "+f.description).join(" ")})),
         ...(snapshot.state_vectors??[]).filter(v=>v.date<snapshot.as_of).map(v=>({label:v.date,href:"/focus/analogue/"+v.date,kind:"Historical date"})),
-        ...[["Overview","/"],["Indicators","/macro"],["Similar Periods","/similarity"],["Market Environment","/regimes"],["Test an Idea","/hypothesis"],["Model a Series","/research/forecast"],["Data Catalogue","/data"],["Market History","/focus/market"],["Experiments","/experiments"]].map(([label,href])=>({label,href,kind:"Module"}))
+        ...[["Overview","/"],["Equities","/equities"],["Equity Screener","/equities/screener"],["Evidence Library","/evidence"],["Chart Explorer","/chart"],["Indicators","/macro"],["Historical Analogues","/similarity"],["Market Environment","/regimes"],["Forecastability","/research/forecast"],["Data Catalogue","/data"],["Market History","/focus/market"]].map(([label,href])=>({label,href,kind:"Module"}))
       ]}>{children}</AppShell></body>
     </html>
   );

@@ -1,4 +1,5 @@
 "use client";
+import {Sun,Moon} from "lucide-react";
 import { useSyncExternalStore } from "react";
 const key = "kanzquant.theme.v1";
 const snapshot = () => document.documentElement.dataset.theme === "light" ? "light" : "dark";
@@ -22,5 +23,5 @@ export function Appearance() {
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem(key, next); } catch {}
     window.dispatchEvent(new Event("kanzquant-theme"));
-  }}>{theme === "dark" ? "☀" : "◐"}<span>Appearance</span></button>;
+  }}>{theme === "dark" ? <Sun size={17} strokeWidth={1.7} aria-hidden="true"/> : <Moon size={17} strokeWidth={1.7} aria-hidden="true"/>}<span>Appearance</span></button>;
 }

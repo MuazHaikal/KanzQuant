@@ -1,5 +1,7 @@
 # KanzQuant
 
+Analyst expectations milestone: [source audit and implementation gate](docs/analyst-expectations-source-audit.md) (14 October 2026). Provider entitlement and applicable storage/display rights remain unconfirmed; no live Expectations feature is enabled.
+
 KanzQuant is a dense quantitative research workstation. Local version 0.2 adds Hypothesis Lab to the validated macro-regime, historical-similarity and Focus Mode workflow. This release is not deployed.
 
 ## Hypothesis Lab / local v0.2

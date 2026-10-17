@@ -17,6 +17,9 @@ const catalog=[{id:"SPX",displayName:"S&P 500"},{id:"rates",displayName:"Rates"}
 const state=explorer.parseExplorer({series:"SPX,rates,CPIAUCSL,unknown,SPX",range:"10Y",interval:"1M",mode:"context",date:"2022-03-31"},catalog);
 assert.deepEqual(Array.from(state.series),["SPX","rates","CPIAUCSL"]);assert.equal(state.range,"10Y");assert.equal(state.date,"2022-03-31");assert.equal(state.comparison,"separate");
 const parsed=Object.fromEntries(new URLSearchParams(explorer.explorerQuery(state)));assert.equal(explorer.parseExplorer(parsed,catalog).date,state.date);
+assert.equal(explorer.parseExplorer({},[{...catalog[0],type:'market'}]).interval,'1D');
+assert.equal(explorer.parseExplorer({},catalog).range,'3Y');
+assert(guided.guidedLink(guided.presets[0],'SPX').startsWith('/evidence?'));
 assert.equal(explorer.parseExplorer({series:"bad",range:"bad",interval:"bad",date:"bad"},catalog).series[0],"SPX");
 assert.equal(explorer.validChartDate("2022-02-31"),false);assert.equal(explorer.validChartDate("2024-02-29"),true);assert.equal(explorer.parseExplorer({date:"2022-02-31"},catalog).date,"");
 const points=[{date:"2022-02-28",value:2},{date:"2022-03-31",value:3},{date:"2022-04-30",value:4}];

@@ -29,7 +29,7 @@ export function guidedParameters(condition:GuidedCondition,asset:string="SPX",ho
  return {...defaults,conditions:[{source:condition.factor,metric:condition.metric,op:condition.op,threshold:condition.threshold}],asset:asset in marketNames?asset as HypothesisParameters["asset"]:"SPX",horizon:[3,6,12].includes(horizon)?horizon:defaultHorizon};
 }
 export function guidedLink(condition:GuidedCondition,asset="SPX") {
- return "/hypothesis?"+new URLSearchParams({source:condition.factor,metric:condition.metric,op:condition.op,threshold:String(condition.threshold),asset,horizon:"6"});
+ return "/evidence?"+new URLSearchParams({source:condition.factor,asset,horizon:"6"});
 }
 export const presets:GuidedCondition[] = [
  {factor:"rates",metric:"level",op:"above",threshold:90,label:"Very high",percentile:null,change:null,priority:0},

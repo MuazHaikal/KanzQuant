@@ -1,0 +1,776 @@
+[
+  {
+    "page": "data-catalogue",
+    "headings": [
+      "Data Catalogue",
+      "Available Series",
+      "Series Details",
+      "US 10Y Treasury Yield",
+      "Source"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "overview",
+    "headings": [
+      "Overview",
+      "Market Overview",
+      "Historical Analogues",
+      "Growth",
+      "Inflation"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "equities-discovery",
+    "headings": [
+      "Equities",
+      "Interesting Now",
+      "Momentum distribution",
+      "Sector performance",
+      "Drawdown vs 3M return"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "equity-screener",
+    "headings": [
+      "Equity Screener",
+      "Preset Research Views",
+      "Results (518)",
+      "Screen distribution",
+      "Sector breakdown"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "stock-MU",
+    "headings": [
+      "MUMicron Technology",
+      "Price Chart",
+      "Quant snapshot",
+      "Historical Evidence",
+      "Fundamental Trends"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "chart-explorer",
+    "headings": [
+      "Chart Explorer",
+      "S&P 500",
+      "Quant Snapshot",
+      "Research Context",
+      "Historical Analogues"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "evidence-library",
+    "headings": [
+      "Evidence Library",
+      "Studies",
+      "Evidence coverage",
+      "Research themes"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "study-focus",
+    "headings": [
+      "credit 3M change / SPX 6M relationship",
+      "Statistically significant",
+      "Condition logic",
+      "Research settings",
+      "Observed relationship"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "forecastability",
+    "headings": [
+      "Forecastability",
+      "Historical Validation",
+      "Model comparison",
+      "Model Setup",
+      "Current forward forecast"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "factor-focus",
+    "headings": [
+      "Factor Focus / Growth",
+      "Growth Factor",
+      "Growth Factor — Historical Time Series",
+      "What drove the 3M move?",
+      "Historical Episodes"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "historical-analogue",
+    "headings": [
+      "Historical Analogue / 2025-09-30",
+      "Episode Comparison",
+      "Similarity inputs / differences",
+      "Historical Outcome Distribution",
+      "Observed State Timeline"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "overview",
+    "headings": [
+      "Overview",
+      "Market Overview",
+      "Historical Analogues",
+      "Growth",
+      "Inflation"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "equities-discovery",
+    "headings": [
+      "Equities",
+      "Interesting Now",
+      "Momentum distribution",
+      "Sector performance",
+      "Drawdown vs 3M return"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "equity-screener",
+    "headings": [
+      "Equity Screener",
+      "Preset Research Views",
+      "Results (518)",
+      "Screen distribution",
+      "Sector breakdown"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "stock-MU",
+    "headings": [
+      "MUMicron Technology",
+      "Price Chart",
+      "Quant snapshot",
+      "Historical Evidence",
+      "Fundamental Trends"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "chart-explorer",
+    "headings": [
+      "Chart Explorer",
+      "S&P 500",
+      "Quant Snapshot",
+      "Research Context",
+      "Historical Analogues"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "evidence-library",
+    "headings": [
+      "Evidence Library",
+      "Studies",
+      "Evidence coverage",
+      "Research themes"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "study-focus",
+    "headings": [
+      "credit 3M change / SPX 6M relationship",
+      "Statistically significant",
+      "Condition logic",
+      "Research settings",
+      "Observed relationship"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "forecastability",
+    "headings": [
+      "Forecastability",
+      "Historical Validation",
+      "Model comparison",
+      "Model Setup",
+      "Current forward forecast"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "factor-focus",
+    "headings": [
+      "Factor Focus / Growth",
+      "Growth Factor",
+      "Growth Factor — Historical Time Series",
+      "What drove the 3M move?",
+      "Historical Episodes"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "historical-analogue",
+    "headings": [
+      "Historical Analogue / 2025-09-30",
+      "Episode Comparison",
+      "Similarity inputs / differences",
+      "Historical Outcome Distribution",
+      "Observed State Timeline"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "data-catalogue",
+    "headings": [
+      "Data Catalogue",
+      "Available Series",
+      "Series Details",
+      "US 10Y Treasury Yield",
+      "Source"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "data-catalogue-final",
+    "headings": [
+      "Data Catalogue",
+      "Available Series",
+      "Series Details",
+      "US 10Y Treasury Yield",
+      "Source"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "equities-discovery-final",
+    "headings": [
+      "Equities",
+      "Interesting Now",
+      "Momentum distribution",
+      "Sector performance",
+      "Drawdown vs 3M return"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "equity-screener-final",
+    "headings": [
+      "Equity Screener",
+      "Preset Research Views",
+      "Results (518)",
+      "Screen distribution",
+      "Sector breakdown"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "stock-MU-final",
+    "headings": [
+      "MUMicron Technology",
+      "Price Chart",
+      "Quant snapshot",
+      "Historical Evidence",
+      "Fundamental Trends"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "chart-explorer-final",
+    "headings": [
+      "Chart Explorer",
+      "S&P 500",
+      "Quant Snapshot",
+      "Research Context",
+      "Historical Analogues"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "evidence-library-final",
+    "headings": [
+      "Evidence Library",
+      "Studies",
+      "Evidence coverage",
+      "Research themes"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "study-focus-final",
+    "headings": [
+      "credit 3M change / SPX 6M relationship",
+      "Statistically significant",
+      "Condition logic",
+      "Research settings",
+      "Observed relationship"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "forecastability-final",
+    "headings": [
+      "Forecastability",
+      "Historical Validation",
+      "Model comparison",
+      "Model Setup",
+      "Current forward forecast"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "factor-focus-final",
+    "headings": [
+      "Factor Focus / Growth",
+      "Growth Factor",
+      "Growth Factor — Historical Time Series",
+      "What drove the 3M move?",
+      "Historical Episodes"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "historical-analogue-final",
+    "headings": [
+      "Historical Analogue / 2025-09-30",
+      "Episode Comparison",
+      "Similarity inputs / differences",
+      "Historical Outcome Distribution",
+      "Observed State Timeline"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "data-catalogue-final",
+    "headings": [
+      "Data Catalogue",
+      "Available Series",
+      "Series Details",
+      "US 10Y Treasury Yield",
+      "Source"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  },
+  {
+    "page": "data-catalogue-final",
+    "headings": [
+      "Data Catalogue",
+      "Available Series",
+      "Series Details",
+      "US 10Y Treasury Yield",
+      "Source"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "overview-final",
+    "headings": [
+      "Overview",
+      "Market Overview",
+      "Historical Analogues",
+      "Growth",
+      "Inflation"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "equities-discovery-final",
+    "headings": [
+      "Equities",
+      "Interesting Now",
+      "Momentum distribution",
+      "Sector performance",
+      "Drawdown vs 3M return"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "equity-screener-final",
+    "headings": [
+      "Equity Screener",
+      "Preset Research Views",
+      "Results (518)",
+      "Screen distribution",
+      "Sector breakdown"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "stock-MU-final",
+    "headings": [
+      "Equity research unavailable"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "chart-explorer-final",
+    "headings": [
+      "Chart Explorer",
+      "S&P 500",
+      "Quant Snapshot",
+      "Research Context",
+      "Historical Analogues"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "evidence-library-final",
+    "headings": [
+      "Evidence Library",
+      "Studies",
+      "Evidence coverage",
+      "Research themes"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "study-focus-final",
+    "headings": [
+      "credit 3M change / SPX 6M relationship",
+      "Statistically significant",
+      "Condition logic",
+      "Research settings",
+      "Observed relationship"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "forecastability-final",
+    "headings": [
+      "Forecastability",
+      "Historical Validation",
+      "Model comparison",
+      "Model Setup",
+      "Current forward forecast"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "factor-focus-final",
+    "headings": [
+      "Factor Focus / Growth",
+      "Growth Factor",
+      "Growth Factor — Historical Time Series",
+      "What drove the 3M move?",
+      "Historical Episodes"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "historical-analogue-final",
+    "headings": [
+      "Historical Analogue / 2025-09-30",
+      "Episode Comparison",
+      "Similarity inputs / differences",
+      "Historical Outcome Distribution",
+      "Observed State Timeline"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "stock-MU-final",
+    "headings": [
+      "MUMicron Technology",
+      "Price Chart",
+      "Quant snapshot",
+      "Historical Evidence",
+      "Fundamental Trends"
+    ],
+    "height": 1080,
+    "invalid": false,
+    "scrollWidth": 1920,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1920
+  },
+  {
+    "page": "data-catalogue-final-unclipped",
+    "headings": [
+      "Data Catalogue",
+      "Available Series",
+      "Series Details",
+      "US 10Y Treasury Yield",
+      "Source"
+    ],
+    "height": 901,
+    "invalid": false,
+    "scrollWidth": 1440,
+    "sidebar": 179.99819946289062,
+    "topbar": 51.99454879760742,
+    "unnamedButtons": 0,
+    "width": 1440
+  }
+]

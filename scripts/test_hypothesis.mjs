@@ -16,8 +16,10 @@ console.log("Input whitelist, bounds, AND limit, method/mode validation, prefill
 const base=process.env.FOCUS_TEST_URL??"http://127.0.0.1:3001",sql=neon(process.env.DATABASE_URL);
 const [before]=await sql`SELECT (SELECT count(*)::int FROM market_observations) markets,(SELECT count(*)::int FROM observations) macro,(SELECT count(*)::int FROM research_runs WHERE module='macro.research') source`;
 const family="v0.2-verification-"+Date.now();
+const internalHeaders={"Content-Type":"application/json",Authorization:`Bearer ${process.env.HYPOTHESIS_RUN_SECRET}`};
+for(const route of ["prepare","run"]){assert.equal((await fetch(base+"/api/hypothesis/"+route,{method:"POST",body:JSON.stringify(defaults)})).status,403);assert.equal((await fetch(base+"/api/hypothesis/"+route,{method:"POST",headers:{Authorization:"Bearer invalid"},body:JSON.stringify(defaults)})).status,403);}
 async function runViaApi(input){
- const prepStart=performance.now();const prep=await fetch(base+"/api/hypothesis/prepare",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(input),signal:AbortSignal.timeout(60000)});
+ const prepStart=performance.now();const prep=await fetch(base+"/api/hypothesis/prepare",{method:"POST",headers:internalHeaders,body:JSON.stringify(input),signal:AbortSignal.timeout(60000)});
  assert.equal(prep.status,200,"Prepare must succeed without waiting for Python");const capability=await prep.json();const prepare_ms=Math.round(performance.now()-prepStart);
  assert(capability.run_id&&capability.execution_token&&capability.execution_url);assert(!("HYPOTHESIS_RUN_SECRET" in capability));
  const queued=await(await fetch(base+`/api/hypothesis/${capability.run_id}`)).json();assert.equal(queued.status,"queued");assert.equal(queued.result,null);
@@ -48,9 +50,10 @@ for(const input of requests){const start=performance.now();const result=await ru
 assert.equal(runs[0].result.summary.status,"COMPLETE");assert.equal(runs[1].result.summary.status,"COMPLETE");assert.equal(runs[2].result.summary.status,"INSUFFICIENT SAMPLE");assert.equal(runs[2].result.summary.p,null);
 const retry=await runViaApi(requests[0]);assert.deepEqual(retry.result,runs[0].result);assert.notEqual(retry.id,runs[0].id);
 const adjusted=await (await fetch(base+`/api/hypothesis/${runs[0].id}`)).json();assert.equal(adjusted.family_count,5);assert(adjusted.adjusted_p>=adjusted.result.summary.p);
+const reusedResponse=await fetch(base+"/api/hypothesis/prepare",{method:"POST",headers:{...internalHeaders,"X-KanzQuant-Reuse":"dataset"},body:JSON.stringify(requests[0])});assert.equal(reusedResponse.status,200);assert.equal((await reusedResponse.json()).run_id,retry.id,"Controlled reruns reuse the same frozen definition and data");
 const recent=await (await fetch(base+"/api/hypothesis/recent")).json();assert(recent.some(r=>r.id===runs[2].id));
-assert.equal((await fetch(base+"/api/hypothesis/run",{method:"POST",body:JSON.stringify({...defaults,asset:"FAKE"})})).status,400);
-assert.equal((await fetch(base+"/api/hypothesis/run",{method:"POST",headers:{Origin:"https://untrusted.example"},body:JSON.stringify(defaults)})).status,403);
+assert.equal((await fetch(base+"/api/hypothesis/run",{method:"POST",headers:internalHeaders,body:JSON.stringify({...defaults,asset:"FAKE"})})).status,400);
+assert.equal((await fetch(base+"/api/hypothesis/run",{method:"POST",headers:{...internalHeaders,Origin:"https://untrusted.example"},body:JSON.stringify(defaults)})).status,403);
 assert.equal((await fetch(base+"/api/hypothesis/not-a-uuid")).status,404);
 const [after]=await sql`SELECT (SELECT count(*)::int FROM market_observations) markets,(SELECT count(*)::int FROM observations) macro,(SELECT count(*)::int FROM research_runs WHERE module='macro.research') source`;assert.deepEqual(before,after);
 console.log("Real persisted targets, all four horizons via robustness, small-sample/null ledger, AND, shared-baseline handling, exact reopening/repetition, family FDR, API rejection and unchanged unrelated data: passed");

@@ -1,0 +1,156 @@
+/* Phase 4 only. Existing shell and Phases 1–3 remain locked. */
+:is(.phase-four-forecast,.phase-four-factor,.phase-four-analogue){min-width:0;font-variant-numeric:tabular-nums}
+:is(.phase-four-forecast,.phase-four-factor,.phase-four-analogue) .panel-head{min-height:38px;padding:9px 12px!important;align-items:baseline;gap:8px;border-bottom:1px solid var(--line)}
+:is(.phase-four-forecast,.phase-four-factor,.phase-four-analogue) .panel-title{font-size:13px!important;font-weight:600}
+:is(.phase-four-forecast,.phase-four-factor,.phase-four-analogue) .panel-meta{font-size:10px}
+.focus-workspace:has(>.phase-four-factor,>.phase-four-analogue)>.focus-head{min-height:48px;margin-bottom:12px}
+.focus-workspace:has(>.phase-four-factor,>.phase-four-analogue)>.focus-head h1{font-size:23px}
+.phase-four-forecast .migration-page-title{margin-bottom:0;min-height:48px}
+.phase-four-forecast .migration-page-title>div{display:flex;align-items:baseline;gap:16px}
+.phase-four-forecast .migration-page-title h1{font-size:23px}
+.phase-four-forecast .migration-page-title p{margin:0;font-size:12px}
+.phase-four-forecast.has-forecast-result{grid-template-columns:minmax(0,2.6fr) minmax(330px,1fr);gap:12px}
+.phase-four-forecast .canonical-validation>div:first-child{grid-column:1;grid-row:2}
+.phase-four-forecast .canonical-validation>.forecast-research-rail{grid-column:2;grid-row:2/4;gap:10px}
+.phase-four-forecast .canonical-validation .forecast-plot svg{height:380px;min-height:360px;max-height:none}
+.phase-four-forecast .validation-summary{display:grid;grid-template-columns:1.2fr 1.5fr .7fr .8fr;margin:0;border-bottom:1px solid var(--line);padding:12px 0}
+.phase-four-forecast .validation-summary>div{min-width:0;padding:0 12px;border-right:1px solid var(--line)}
+.phase-four-forecast .validation-summary>div:last-child{border:0}
+.phase-four-forecast .validation-summary dt{font-size:10px;color:var(--muted)}
+.phase-four-forecast .validation-summary dd{font-size:14px;font-weight:550;margin:6px 0}
+.phase-four-forecast .validation-summary small{font-size:10px;color:var(--muted)}
+.phase-four-forecast .validation-timeline{font-size:9px;gap:0;border:1px solid var(--line);border-top:0}
+.phase-four-forecast .forecast-verdict{padding:0;gap:0;border:1px solid var(--line);overflow:hidden}
+.phase-four-forecast .benchmark-verdict header{padding:12px;border-bottom:1px solid var(--line)}
+.phase-four-forecast .benchmark-verdict header small{display:block;text-transform:uppercase;color:var(--muted);font-size:10px}
+.phase-four-forecast .benchmark-verdict header strong{display:block;font-size:17px;line-height:1.4;margin-top:7px;color:var(--text)}
+.phase-four-forecast .benchmark-verdict dl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px;margin:0}
+.phase-four-forecast .benchmark-verdict dt{color:var(--muted);font-size:10px}
+.phase-four-forecast .benchmark-verdict dd{margin:5px 0 0;font-size:20px;font-weight:550}
+.phase-four-forecast .benchmark-verdict p{font-size:10px;line-height:1.5;color:var(--muted);padding:0 12px 10px;margin:0}
+.phase-four-forecast .forecast-verdict label{padding:8px 12px;border-top:1px solid var(--line);font-size:10px}
+.phase-four-forecast .model-settings{display:grid;grid-template-columns:85px 1fr;gap:7px;font-size:11px!important;margin:0}
+.phase-four-forecast .model-settings dd{margin:0}
+.phase-four-forecast .contained-settings{font-size:10px;margin-top:12px}
+.phase-four-forecast .lowest-tested-model{background:#2377ff12;box-shadow:inset 2px 0 var(--accent-blue)}
+.phase-four-forecast .forecast-model-table :is(th,td){font-size:11px;padding:8px 10px;height:32px}
+.phase-four-forecast .forecast-model-table th{text-align:right}.phase-four-forecast .forecast-model-table th:first-child{text-align:left}
+.phase-four-forecast .comparison-sample-note{font-size:9px;color:var(--muted);padding:8px 10px;margin:0;border-top:1px solid var(--line);line-height:1.5}
+.phase-four-forecast.has-forecast-result>.canonical-diagnostics{grid-column:1;grid-row:3;display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:0;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+.phase-four-forecast .canonical-diagnostics>.panel{border:0;border-right:1px solid var(--line);border-radius:0;min-width:0}
+.phase-four-forecast .canonical-diagnostics>.panel:last-child{border-right:0}
+.phase-four-forecast .canonical-diagnostics .panel-head{min-height:34px;padding:8px 10px!important;flex-wrap:wrap;gap:3px}
+.phase-four-forecast .canonical-diagnostics .panel-title{font-size:11px!important}
+.phase-four-forecast .canonical-diagnostics .panel-body{padding:10px}
+.phase-four-forecast .canonical-diagnostics .no-pad{padding:0}
+.phase-four-forecast .canonical-diagnostics .forecast-plot svg{height:150px;min-height:150px}
+.phase-four-forecast .stationarity-tests{gap:8px}
+.phase-four-forecast .stationarity-tests strong{font-size:11px;line-height:1.5}
+.phase-four-forecast .stationarity-tests small{font-size:9px}
+.phase-four-forecast .diagnostic-note{font-size:10px;margin:8px 0}
+.phase-four-forecast .coverage-bars{gap:12px}.phase-four-forecast .coverage-bars>div{font-size:10px;grid-template-columns:42px 1fr 70px;gap:6px}
+.phase-four-forecast .coverage-bars b{font-size:10px}
+.phase-four-forecast.has-forecast-result>.canonical-fan{grid-column:1/-1;grid-row:auto;border:1px solid var(--line);border-radius:7px;background:var(--panel);padding:10px 12px}
+.phase-four-forecast .canonical-fan>summary{font-size:11px;cursor:pointer;color:var(--muted)}
+.phase-four-forecast .canonical-fan>.panel{margin-top:10px;border:0}
+.phase-four-forecast .forecast-readout{font-size:10px;padding:7px 12px;gap:8px;flex-wrap:wrap;min-height:30px}
+.phase-four-forecast .forecast-result-actions{padding:8px 12px;font-size:10px}
+.phase-four-forecast .forecast-methodology{font-size:11px}
+.phase-four-forecast .forecast-spec{font-size:11px}.phase-four-forecast .forecast-spec :is(select,input,button){font-size:11px;min-height:29px}
+.phase-four-factor .factor-summary-strip{gap:12px;padding:12px;margin-bottom:12px}
+.phase-four-factor .factor-summary-strip>div{min-width:220px;max-width:250px}
+.phase-four-factor .factor-summary-strip h2{font-size:15px}
+.phase-four-factor .factor-summary-strip dl>div{padding:0 12px}
+.phase-four-factor .factor-summary-strip dt{font-size:10px;margin-bottom:6px}
+.phase-four-factor .factor-summary-strip dd{font-size:21px;color:var(--text)}
+.phase-four-factor .factor-summary-strip dl>div:nth-last-child(-n+2) dd{font-size:16px}
+.phase-four-factor .factor-summary-strip small{font-size:9px}
+.phase-four-factor nav[aria-label="Select macro factor"]{display:flex;flex-wrap:wrap;gap:5px 8px;margin:7px 0}
+.phase-four-factor nav[aria-label="Select macro factor"] a{font-size:10px;margin:0;color:var(--muted)}
+.phase-four-factor nav[aria-label="Select macro factor"] a[aria-current=page]{color:var(--accent-blue)}
+.phase-four-factor .factor-primary-grid{grid-template-columns:minmax(0,2fr) minmax(340px,1fr);gap:12px}
+.phase-four-factor .chart-tools{min-height:34px;padding:5px 12px;font-size:10px}
+.phase-four-factor .chart-tools button{padding:4px 6px;font-size:10px}
+.phase-four-factor .chart-legend{font-size:10px}
+.phase-four-factor .research-current-label text{fill:#fff}
+.phase-four-factor .contribution-direction-key{display:flex;justify-content:space-between;padding:9px 12px;font-size:10px;color:var(--muted);border-bottom:1px solid var(--line)}
+.phase-four-factor .contribution-row{padding:9px 12px;font-size:11px;min-height:37px}
+.phase-four-factor .contribution-row .positive{background:#458be5}.phase-four-factor .contribution-row .negative{background:#b58eac}
+.phase-four-factor .contribution-row :is(strong,b){font-size:11px;color:var(--text)}
+.phase-four-factor .factor-evidence-grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1.15fr);gap:12px}
+.phase-four-factor .factor-episodes-scroll{max-height:255px}
+.phase-four-factor .related-factor-table{min-width:0}
+.phase-four-factor .related-factor-table :is(th,td){font-size:11px;padding:6px 8px;white-space:nowrap}
+.phase-four-factor .related-factor-table .spark{max-width:80px}
+.phase-four-factor .related-factor-table .spark path{stroke:var(--accent-blue)}
+.phase-four-factor .factor-state-label{font-size:10px;color:var(--muted)}
+.phase-four-factor .empirical-strip svg{height:145px}
+.phase-four-factor .factor-component-details{font-size:10px;padding:8px 12px}
+.phase-four-analogue .analogue-episode-nav{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.phase-four-analogue .analogue-episode-nav a{padding:5px 9px;font-size:10px;border:1px solid transparent;border-radius:4px;color:var(--muted)}
+.phase-four-analogue .analogue-episode-nav a[aria-current=page]{border-color:#2377ff60;background:#2377ff14;color:var(--accent-blue)}
+.phase-four-analogue .analogue-episode-nav a:last-child{margin-left:auto;color:var(--accent-blue)}
+.phase-four-analogue .analogue-primary-grid{grid-template-columns:minmax(0,3fr) minmax(320px,1fr);gap:12px}
+.phase-four-analogue .analogue-primary-grid{grid-template-rows:min-content 1fr}
+.phase-four-analogue .analogue-main{display:contents}
+.phase-four-analogue .analogue-main>.panel{grid-column:1;grid-row:1;min-width:0}
+.phase-four-analogue .analogue-summary{grid-column:2;grid-row:1/3;gap:10px}
+.phase-four-analogue .analogue-main>.panel .market-canvas{height:380px!important}
+.phase-four-analogue .market-chart{border:0;background:none;padding:0 10px 5px}
+.phase-four-analogue .market-chart-head{padding:8px 3px;min-height:34px}.phase-four-analogue .terminal-select{font-size:10px}
+.phase-four-analogue .market-readout{font-size:10px;padding:5px 3px;min-height:28px}
+.phase-four-analogue .market-chart-foot{font-size:9px}
+.phase-four-analogue .analogue-score{padding:0 0 10px;gap:12px}
+.phase-four-analogue .analogue-score>strong{font-size:31px}
+.phase-four-analogue .analogue-score>span{font-size:10px}
+.phase-four-analogue .analogue-regimes{margin:0 0 8px}
+.phase-four-analogue .analogue-regimes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.phase-four-analogue .analogue-regimes>div{display:block!important}
+.phase-four-analogue .analogue-regimes dd{margin-top:5px}
+.phase-four-analogue .analogue-regimes>div{padding:6px 0;font-size:11px}
+.phase-four-analogue .similarity-term-list{padding:8px 0;border-top:1px solid var(--line)}
+.phase-four-analogue .similarity-term-list h3{font-size:11px;margin:0 0 7px;font-weight:550}
+.phase-four-analogue .similarity-term-list>div{display:flex;justify-content:space-between;gap:8px;padding:5px 0;font-size:10px}
+.phase-four-analogue .similarity-term-list b{font-weight:500;color:var(--text)}
+.phase-four-analogue .similarity-term-list small{font-size:9px;color:var(--muted)}
+.phase-four-analogue .analogue-lower-grid{grid-column:1;grid-row:2;margin-top:0;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,.9fr);gap:10px}
+.phase-four-analogue .analogue-lower-grid>.panel:first-child{grid-column:auto}
+.phase-four-analogue .analogue-input-scroll{max-height:242px}
+.phase-four-analogue .analogue-input-scroll .data-table{min-width:385px}
+.phase-four-analogue .analogue-lower-grid .panel-head{flex-wrap:wrap;gap:3px}
+.phase-four-analogue .analogue-lower-grid .contained-note,.phase-four-analogue .analogue-summary .contained-note{padding:8px 12px;font-size:9px;line-height:1.5;margin:0}
+.phase-four-analogue .analogue-lower-grid .empirical-strip svg{height:145px}
+.phase-four-analogue .analogue-timeline>div{padding:8px 12px;font-size:10px}.phase-four-analogue .analogue-timeline small{font-size:10px}
+@media(max-width:1500px){
+ .phase-four-forecast .validation-summary{grid-template-columns:1fr 1.3fr .6fr .8fr}
+ .phase-four-forecast .validation-summary dd{font-size:12px}.phase-four-forecast .validation-summary>div{padding:0 9px}
+ .phase-four-forecast .canonical-validation .forecast-plot svg{height:340px;min-height:340px}
+ .phase-four-forecast .canonical-diagnostics{grid-template-columns:1.3fr 1fr!important}
+ .phase-four-forecast .canonical-diagnostics>.panel:last-child{grid-column:1/-1;border-top:1px solid var(--line)}
+ .phase-four-factor .factor-summary-strip>div{min-width:170px;max-width:185px}
+ .phase-four-factor .factor-summary-strip dl>div{padding:0 8px}.phase-four-factor .factor-summary-strip dd{font-size:19px}
+ .phase-four-factor .factor-summary-strip dl>div:nth-last-child(-n+2) dd{font-size:14px}
+ .phase-four-factor .factor-primary-grid{grid-template-columns:minmax(0,1.8fr) minmax(330px,1fr)}
+ .phase-four-factor .factor-evidence-grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+ .phase-four-factor .factor-evidence-grid>.panel:last-child{grid-column:1/-1}
+ .phase-four-analogue .analogue-primary-grid{grid-template-columns:minmax(0,2.6fr) minmax(300px,1fr)}
+ .phase-four-analogue .analogue-main>.panel .market-canvas{height:350px!important}
+ .phase-four-analogue .analogue-lower-grid{grid-template-columns:1fr 1fr}
+ .phase-four-analogue .analogue-lower-grid>.panel:first-child{grid-column:1/-1}
+ .phase-four-analogue .analogue-input-scroll{max-height:180px}
+}
+@media(max-width:1100px){
+ .phase-four-forecast.has-forecast-result{display:flex;flex-direction:column}.phase-four-forecast.has-forecast-result>*{width:100%}
+ .phase-four-forecast .canonical-validation{display:flex!important;flex-direction:column;gap:12px}
+ .phase-four-forecast .canonical-validation>.forecast-research-rail{display:grid;grid-template-columns:1fr 1fr;width:100%}
+ .phase-four-factor .factor-primary-grid,.phase-four-analogue .analogue-primary-grid{grid-template-columns:1fr}
+ .phase-four-analogue .analogue-summary{grid-column:1;grid-row:auto;display:grid;grid-template-columns:1fr 1fr}
+ .phase-four-analogue .analogue-lower-grid{grid-row:auto}
+}
+@media(max-width:700px){
+ .phase-four-forecast .migration-page-title>div{display:block}.phase-four-forecast .validation-summary{grid-template-columns:1fr 1fr;gap:12px}
+ .phase-four-forecast .canonical-validation>.forecast-research-rail{grid-template-columns:1fr}
+ .phase-four-factor .factor-summary-strip{display:block}.phase-four-factor .factor-summary-strip>div{max-width:none}
+ .phase-four-factor .factor-evidence-grid{grid-template-columns:1fr}
+ .phase-four-analogue .analogue-summary{display:flex}
+}

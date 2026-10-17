@@ -6,7 +6,7 @@ import type { HypothesisParameters, HypothesisStats } from "@/lib/hypothesis-typ
 
 const valid = (n: number | null | undefined): n is number => n != null && Number.isFinite(n);
 const pct = (n: number) => Math.max(0, Math.min(100, n));
-const exact = (n: number | null | undefined, suffix = "") => valid(n) ? `${n > 0 ? "+" : ""}${n.toFixed(2)}${suffix}` : "N/A";
+const exact = (n: number | null | undefined, suffix = "") => {if(!valid(n))return "N/A";const rounded=Number(n.toFixed(2));return `${rounded>0?"+":""}${(rounded===0?0:rounded).toFixed(2)}${suffix}`;};
 export function positionLabel(percentile: number | null) {
   if (!valid(percentile)) return "N/A";
   return ({"Below usual":"Low", "Above usual":"High", "In range":"Normal"} as Record<string,string>)[levelState(percentile)] ?? levelState(percentile);
@@ -87,9 +87,9 @@ export function ConditionalDiagram({parameters:p,summary:s}: {parameters:Hypothe
   </div>;
 }
 
-export function ContributionBars({rows}: {rows:{name:string;value:number|null}[]}) {
+export function ContributionBars({rows,unit="σ"}: {rows:{name:string;value:number|null}[];unit?:string}) {
   const extent=Math.max(...rows.map(r=>Math.abs(r.value??0)),.001);
-  return <div className="contribution-bars">{rows.map(r=><div key={r.name} className="contribution-row"><span>{r.name.replaceAll("SPX","S&P 500")}</span><div className="signed-track" role="img" aria-label={`${r.name} input contribution ${exact(r.value,"σ")}`}><i className="zero-axis"/>{valid(r.value)?<b className={r.value<0?"negative":"positive"} style={{left:r.value<0?(50-Math.abs(r.value)/extent*49)+"%":"50%",width:Math.abs(r.value)/extent*49+"%"}}/>:null}</div><strong>{exact(r.value,"σ")}</strong></div>)}<div className="visual-detail">Input contribution · arithmetic decomposition, not causation</div></div>;
+  return <div className="contribution-bars">{rows.map(r=><div key={r.name} className="contribution-row"><span>{r.name.replaceAll("SPX","S&P 500")}</span><div className="signed-track" role="img" aria-label={`${r.name} input contribution ${exact(r.value,unit)}`}><i className="zero-axis"/>{valid(r.value)?<b className={r.value<0?"negative":"positive"} style={{left:r.value<0?(50-Math.abs(r.value)/extent*49)+"%":"50%",width:Math.abs(r.value)/extent*49+"%"}}/>:null}</div><strong>{exact(r.value,unit)}</strong></div>)}<div className="visual-detail">Input contribution · arithmetic decomposition, not causation</div></div>;
 }
 
 export type OutcomeTile={horizon:string;median:number|null;hit:number|null;n:number;values?:number[];href?:string};

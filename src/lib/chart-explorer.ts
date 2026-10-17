@@ -8,7 +8,8 @@ export type SavedView={id:string;name:string;state:ExplorerState};
 export function validChartDate(date:string){return /^\d{4}-\d{2}-\d{2}$/.test(date)&&Number.isFinite(Date.parse(date))&&new Date(date+"T00:00:00Z").toISOString().slice(0,10)===date;}
 export function parseExplorer(query:Record<string,string|undefined>,catalog:ChartSeries[]):ExplorerState {
  const ids=[...new Set((query.series??"SPX").split(","))].filter(id=>catalog.some(s=>s.id===id)).slice(0,4);
- return {series:ids.length?ids:["SPX"],range:ranges.includes(query.range as MarketRange)?query.range as MarketRange:"5Y",interval:intervals.includes(query.interval as Interval)?query.interval as Interval:"1M",mode:["chart","compare","context","events"].includes(query.mode??"")?query.mode as ExplorerState["mode"]:"chart",comparison:query.comparison==="normalized"?"normalized":"separate",date:validChartDate(query.date??"")?query.date!:""};
+ const market=catalog.find(c=>c.id===(ids[0]??"SPX"))?.type==="market";
+ return {series:ids.length?ids:["SPX"],range:ranges.includes(query.range as MarketRange)?query.range as MarketRange:"3Y",interval:intervals.includes(query.interval as Interval)?query.interval as Interval:market?"1D":"1M",mode:["chart","compare","context","events"].includes(query.mode??"")?query.mode as ExplorerState["mode"]:"chart",comparison:query.comparison==="normalized"?"normalized":"separate",date:validChartDate(query.date??"")?query.date!:""};
 }
 export function explorerQuery(state:ExplorerState){return new URLSearchParams({series:state.series.join(","),range:state.range,interval:state.interval,mode:state.mode,comparison:state.comparison,...(state.date?{date:state.date}:{})}).toString();}
 export function latestAt(points:Point[],date:string):Point|undefined {let lo=0,hi=points.length;while(lo<hi){const mid=(lo+hi)>>>1;if(points[mid].date<=date)lo=mid+1;else hi=mid;}return points[lo-1];}

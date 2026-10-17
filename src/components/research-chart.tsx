@@ -9,7 +9,7 @@ type Series = {name:string;points:Point[];color?:string};
 export type ChartContext = {date:string;regime:string;factors:Record<string,number|null>};
 const colors = ["var(--teal)","var(--cyan)","var(--warning)"];
 const emptyPoints: Point[] = [];
-export function ResearchChart({series,height:pixelHeight=200,zero=false,regimes=[],inspectDates=[],initialStart,persistKey,context=[],explorerId}:{series:Series[];height?:number;zero?:boolean;regimes?:{date:string;color:string}[];inspectDates?:string[];initialStart?:string;persistKey?:string;context?:ChartContext[];explorerId?:string}) {
+export function ResearchChart({series,height:pixelHeight=200,zero=false,regimes=[],inspectDates=[],initialStart,persistKey,context=[],explorerId,currentLabel=false}:{series:Series[];height?:number;zero?:boolean;regimes?:{date:string;color:string}[];inspectDates?:string[];initialStart?:string;persistKey?:string;context?:ChartContext[];explorerId?:string;currentLabel?:boolean}) {
   const all=series[0]?.points??emptyPoints,max=Math.max(0,all.length-1),id=useId();
   const initial:Domain=[initialStart?Math.max(0,all.findIndex(p=>p.date>=initialStart)):0,max];
   const [domain,setDomain]=useState<Domain>(initial),[selected,setSelected]=useState<number|null>(null),[overlay,setOverlay]=useState("");
@@ -85,6 +85,7 @@ export function ResearchChart({series,height:pixelHeight=200,zero=false,regimes=
         {hi>=max&&<circle cx={x(max)} cy={y(all[max].value)} r="3.5" fill="var(--teal)"/>}
         <g ref={hover} style={{display:"none"}}><line x1="0" x2="0" y1="15" y2={height-30} stroke="var(--text)" strokeDasharray="3 3" opacity=".65"/></g>
       </g>
+      {currentLabel&&hi>=max&&<g className="research-current-label" aria-label={`Current ${all[max].value.toFixed(2)} · ${all[max].date}`}><rect x={Math.min(898,x(max)-50)} y={Math.max(15,Math.min(height-65,y(all[max].value)-23))} width="50" height="21" rx="3" fill="var(--accent-blue)"/><text x={Math.min(923,x(max)-25)} y={Math.max(29,Math.min(height-51,y(all[max].value)-9))} textAnchor="middle" fill="#fff">{all[max].value.toFixed(2)}</text></g>}
       <text x="48" y={height-6}>{visible[0]?.date}</text><text x="948" textAnchor="end" y={height-6}>{visible.at(-1)?.date}</text>
     </svg><div ref={tip} className="chart-hover" style={{display:"none"}}/></div>
     <div className="chart-context">{active.map((s,i)=><span key={s.name} style={{color:s.color??colors[i%3]}}>{i===1?"┄":i===2?"···":"━"} {s.name.replace("Overlay:","")}</span>)}{zero&&<span>Zero · ±1 / ±2 · median {median.toFixed(2)}</span>}<Link className="chart-help" href={"/chart?series="+encodeURIComponent(explorerId??series[0]?.name.toLowerCase().split(" ")[0]??"growth")}>↗ EXPAND CHART</Link></div>

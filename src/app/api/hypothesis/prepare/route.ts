@@ -2,10 +2,12 @@ import { createHmac } from "node:crypto";
 import { prepareHypothesis } from "@/lib/hypothesis-server";
 import { signingSecret } from "@/lib/hypothesis-token";
 import { validateParameters } from "@/lib/hypothesis-types";
+import { internalResearchRequest } from "@/lib/internal-research";
 export const runtime="nodejs";
 export const maxDuration=60;
 const clients=new Map<string,{until:number;count:number}>();
 export async function POST(request:Request){
+ if(!internalResearchRequest(request))return Response.json({error:"Public study execution is disabled. Browse completed studies in the Evidence Library."},{status:403,headers:{"Cache-Control":"no-store"}});
  const origin=request.headers.get("origin");if(origin&&origin!==new URL(request.url).origin)return Response.json({error:"Cross-origin runs are not allowed."},{status:403});
  let secret;try{secret=signingSecret();}catch{return Response.json({error:"Research engine is not configured."},{status:503});}
  // Vercel overwrites its client-IP header; local development uses one conservative bucket.
@@ -19,5 +21,5 @@ export async function POST(request:Request){
  const reader=request.body?.getReader();let body="";const decoder=new TextDecoder();
  if(reader){let size=0;while(true){const chunk=await reader.read();if(chunk.done)break;size+=chunk.value.byteLength;if(size>16000){await reader.cancel();return Response.json({error:"Request is too large."},{status:413});}body+=decoder.decode(chunk.value,{stream:true});}body+=decoder.decode();}
  let input;try{const parsed=JSON.parse(body);input=parsed&&typeof parsed==="object"&&"run_id" in parsed?{run_id:parsed.run_id}:validateParameters(parsed);}catch{return Response.json({error:"Invalid hypothesis settings."},{status:400});}
- try{return Response.json(await prepareHypothesis(input),{headers:{"Cache-Control":"no-store"}});}catch{return Response.json({error:"Run could not be prepared. Check the saved ledger and retry shortly."},{status:503});}
+ try{return Response.json(await prepareHypothesis(input,request.headers.get("x-kanzquant-reuse")==="dataset"),{headers:{"Cache-Control":"no-store"}});}catch{return Response.json({error:"Run could not be prepared. Check the saved ledger and retry shortly."},{status:503});}
 }

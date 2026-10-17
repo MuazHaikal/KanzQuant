@@ -29,6 +29,7 @@ export async function getForecastRun(id:string):Promise<ForecastRun|null>{
  return row?{id:String(row.id),name:String(row.name),parameters:row.parameters as ForecastSpec,status:String(row.status),started_at:new Date(String(row.started_at)).toISOString(),metadata:row.metadata as Record<string,unknown>,result:row.payload as ForecastResult|null}:null;
 }
 export async function recentForecasts(){const rows=await hypothesisSql()`SELECT id::text,name,status,started_at FROM research_runs WHERE module=${moduleName} ORDER BY started_at DESC LIMIT 12`;return rows.map(r=>({id:String(r.id),name:String(r.name),status:String(r.status),date:new Date(String(r.started_at)).toISOString().slice(0,10)}));}
+export async function latestValidatedForecast(){const [row]=await hypothesisSql()`SELECT r.id::text FROM research_runs r JOIN research_results rr ON rr.run_id=r.id AND rr.result_type='forecast' AND rr.result_key='result' WHERE r.module=${moduleName} AND r.status='complete' AND rr.payload->>'status'='COMPLETE' ORDER BY r.completed_at DESC LIMIT 1`;return row?.id?String(row.id):null;}
 export async function prepareForecast(input:unknown,asOf?:string){
  const secret=signingSecret(),endpoint=new URL(executionEndpoint());endpoint.pathname="/v1/forecast/run";
  let id:string;
